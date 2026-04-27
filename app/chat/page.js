@@ -1,10 +1,10 @@
-import { auth } from '@clerk/nextjs'
+import { currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 
-export default function ChatPage() {
-  const { userId } = auth()
-  if (!userId) redirect('/login')
-  
+export default async function ChatPage() {
+  const user = await currentUser()
+  if (!user) redirect('/login')
+
   return (
     <div style={{
       minHeight: '100vh',
