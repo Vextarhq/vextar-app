@@ -5,6 +5,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
+  const [sessionId, setSessionId] = useState(null)
 
   async function sendMessage() {
     if (!input.trim() || loading) return
@@ -17,9 +18,10 @@ export default function ChatPage() {
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: newMessages })
+      body: JSON.stringify({ messages: newMessages, sessionId })
     })
     const data = await res.json()
+    if (data.sessionId) setSessionId(data.sessionId)
     setMessages([...newMessages, { role: 'assistant', content: data.reply }])
     setLoading(false)
   }
