@@ -1,4 +1,5 @@
 import { currentUser } from '@clerk/nextjs/server'
+import { createClient } from '@supabase/supabase-js'
 
 export async function POST(req) {
   const user = await currentUser()
@@ -19,23 +20,7 @@ export async function POST(req) {
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 4096,
-        system: `You are Vextar, an elite AI-powered professional coding assistant. You are precise, efficient, and expert-level.
-
-Your capabilities:
-- Generate clean, production-ready code in any language or framework
-- Refactor and improve existing code
-- Debug and fix errors
-- Explain code concepts clearly
-- Write documentation and tests
-- Review code and suggest improvements
-
-Your style:
-- Always provide complete, working code — never truncated snippets
-- Be direct and concise — no unnecessary filler text
-- When generating code, use proper formatting with syntax highlighting markdown
-- If the user's request is ambiguous, ask one clarifying question before proceeding
-
-You support all languages: Python, JavaScript, TypeScript, Rust, Go, Swift, Kotlin, Java, C++, Ruby, PHP, and more.`,
+        system: `You are Vextar, an elite AI-powered professional coding assistant. You are precise, efficient, and expert-level.`,
         messages: messages
       })
     })
@@ -47,6 +32,30 @@ You support all languages: Python, JavaScript, TypeScript, Rust, Go, Swift, Kotl
 
     const data = await response.json()
     const reply = data.content[0].text
+    const allMessages = [...messages, { role: 'assistant', content: reply }]
+
+    if (user) {
+      const supabase = createClient(
+        process.env.SUPABASE_URL,
+        process.env.SUPABASE_ANON_KEY
+      )
+      const sessionTitle = title || messages[0]?.content?.slice(0, 50) || 'New chat'
+
+      if (sessionId) {
+        await supabase.from('conversations').update({
+          messages: allMessages,
+          updated_at: new Date().toISOString()
+        }).eq('id', sessionId)
+        return Response.json({ reply, sessionId })
+      } else {
+        const { data: created } = await supabase.from('conversations').insert({
+          user_id: user.id,
+          title: sessionTitle,
+          messages: allMessages
+        }).select()
+        return Response.json({ reply, sessionId: created?.[0]?.id })
+      }
+    }
 
     return Response.json({ reply })
   } catch (error) {
