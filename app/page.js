@@ -3,6 +3,6 @@ import { currentUser } from '@clerk/nextjs/server'
 
 export default async function Home() {
   const user = await currentUser()
-  if (user) redirect('/app')
-  return redirect('/login')
+  if (user) redirect('/chat')
+  return redirect('/landing')
 }
