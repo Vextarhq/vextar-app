@@ -7,6 +7,7 @@ export default function ChatPage() {
   const [loading, setLoading] = useState(false)
   const [sessionId, setSessionId] = useState(null)
   const [history, setHistory] = useState([])
+  const [limitReached, setLimitReached] = useState(false)
   const bottomRef = useRef(null)
 
   useEffect(() => {
@@ -18,17 +19,29 @@ export default function ChatPage() {
   }, [messages, loading])
 
   async function sendMessage() {
-    if (!input.trim() || loading) return
+    if (!input.trim() || loading || limitReached) return
     const userMsg = { role: 'user', content: input }
     const newMessages = [...messages, userMsg]
     setMessages(newMessages)
     setInput('')
     setLoading(true)
+
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages: newMessages, sessionId })
     })
+
+    if (res.status === 403) {
+      const data = await res.json()
+      if (data.error === 'limit_reached') {
+        setLimitReached(true)
+        setMessages(prev => prev.slice(0, -1)) // quitar el mensaje del usuario
+        setLoading(false)
+        return
+      }
+    }
+
     const data = await res.json()
     if (data.sessionId) setSessionId(data.sessionId)
     setMessages([...newMessages, { role: 'assistant', content: data.reply }])
@@ -73,7 +86,6 @@ export default function ChatPage() {
           display: flex;
         }
 
-        /* SIDEBAR */
         .sidebar {
           width: 260px;
           background: var(--bg2);
@@ -133,7 +145,6 @@ export default function ChatPage() {
           gap: 4px;
         }
         .history-list::-webkit-scrollbar { width: 3px; }
-        .history-list::-webkit-scrollbar-track { background: transparent; }
         .history-list::-webkit-scrollbar-thumb { background: var(--border); }
 
         .history-item {
@@ -151,18 +162,9 @@ export default function ChatPage() {
           transition: all .2s;
           border-radius: 2px;
         }
-        .history-item:hover {
-          color: var(--text);
-          border-color: var(--border);
-          background: rgba(255,255,255,0.03);
-        }
-        .history-item.active {
-          color: var(--accent);
-          border-color: var(--border-bright);
-          background: var(--accent-glow);
-        }
+        .history-item:hover { color: var(--text); border-color: var(--border); background: rgba(255,255,255,0.03); }
+        .history-item.active { color: var(--accent); border-color: var(--border-bright); background: var(--accent-glow); }
 
-        /* MAIN */
         .chat-main {
           flex: 1;
           display: flex;
@@ -170,7 +172,6 @@ export default function ChatPage() {
           overflow: hidden;
         }
 
-        /* TOP BAR */
         .chat-topbar {
           height: 56px;
           border-bottom: 1px solid var(--border);
@@ -188,14 +189,8 @@ export default function ChatPage() {
           flex-shrink: 0;
         }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
-        .topbar-text {
-          font-size: 10px;
-          letter-spacing: .15em;
-          text-transform: uppercase;
-          color: var(--text-faint);
-        }
+        .topbar-text { font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--text-faint); }
 
-        /* MESSAGES */
         .messages-area {
           flex: 1;
           overflow-y: auto;
@@ -205,10 +200,8 @@ export default function ChatPage() {
           gap: 24px;
         }
         .messages-area::-webkit-scrollbar { width: 3px; }
-        .messages-area::-webkit-scrollbar-track { background: transparent; }
         .messages-area::-webkit-scrollbar-thumb { background: var(--border); }
 
-        /* EMPTY STATE */
         .empty-state {
           flex: 1;
           display: flex;
@@ -220,36 +213,18 @@ export default function ChatPage() {
         }
         .empty-title {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 48px;
-          font-weight: 700;
-          letter-spacing: .05em;
-          text-transform: uppercase;
+          font-size: 48px; font-weight: 700;
+          letter-spacing: .05em; text-transform: uppercase;
           color: var(--text);
         }
         .empty-title span { color: var(--accent); }
-        .empty-sub {
-          font-size: 11px;
-          letter-spacing: .12em;
-          text-transform: uppercase;
-          color: var(--text-faint);
-        }
+        .empty-sub { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-faint); }
 
-        /* BUBBLES */
-        .msg-row {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
+        .msg-row { display: flex; flex-direction: column; gap: 4px; }
         .msg-row.user { align-items: flex-end; }
         .msg-row.assistant { align-items: flex-start; }
 
-        .msg-label {
-          font-size: 9px;
-          letter-spacing: .15em;
-          text-transform: uppercase;
-          color: var(--text-faint);
-          padding: 0 4px;
-        }
+        .msg-label { font-size: 9px; letter-spacing: .15em; text-transform: uppercase; color: var(--text-faint); padding: 0 4px; }
 
         .msg-bubble {
           padding: 14px 18px;
@@ -258,29 +233,20 @@ export default function ChatPage() {
           font-size: 13px;
           line-height: 1.75;
         }
-
         .msg-bubble.user {
-          background: var(--accent);
-          color: #060810;
+          background: var(--accent); color: #060810;
           clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
         }
-
         .msg-bubble.assistant {
-          background: var(--bg3);
-          color: var(--text);
+          background: var(--bg3); color: var(--text);
           border: 1px solid var(--border);
           clip-path: polygon(8px 0, 100% 0, 100% 100%, 0 100%, 0 8px);
         }
 
         .typing-indicator {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          color: var(--accent);
-          font-size: 11px;
-          letter-spacing: .1em;
-          text-transform: uppercase;
-          padding: 0 4px;
+          display: flex; align-items: center; gap: 10px;
+          color: var(--accent); font-size: 11px;
+          letter-spacing: .1em; text-transform: uppercase; padding: 0 4px;
         }
         .typing-dots { display: flex; gap: 4px; }
         .typing-dots span {
@@ -292,15 +258,11 @@ export default function ChatPage() {
         .typing-dots span:nth-child(3) { animation-delay: .4s; }
         @keyframes dotPulse { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
 
-        /* INPUT */
         .input-area {
           padding: 20px 24px;
           border-top: 1px solid var(--border);
-          display: flex;
-          gap: 12px;
-          align-items: flex-end;
-          flex-shrink: 0;
-          background: var(--bg);
+          display: flex; gap: 12px; align-items: flex-end;
+          flex-shrink: 0; background: var(--bg);
         }
 
         .input-wrapper {
@@ -310,52 +272,94 @@ export default function ChatPage() {
           clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
           transition: border-color .2s;
         }
-        .input-wrapper:focus-within {
-          border-color: var(--border-bright);
-        }
+        .input-wrapper:focus-within { border-color: var(--border-bright); }
+        .input-wrapper.disabled { opacity: .4; pointer-events: none; }
 
         .chat-input {
-          width: 100%;
-          background: transparent;
-          border: none;
-          outline: none;
-          color: var(--text);
-          font-family: 'Share Tech Mono', monospace;
-          font-size: 13px;
-          padding: 14px 18px;
-          resize: none;
-          min-height: 48px;
-          max-height: 160px;
-          line-height: 1.6;
+          width: 100%; background: transparent; border: none; outline: none;
+          color: var(--text); font-family: 'Share Tech Mono', monospace;
+          font-size: 13px; padding: 14px 18px; resize: none;
+          min-height: 48px; max-height: 160px; line-height: 1.6;
         }
         .chat-input::placeholder { color: var(--text-faint); }
 
         .send-btn {
-          background: var(--accent);
-          color: #060810;
-          border: none;
-          padding: 14px 22px;
-          font-family: 'Share Tech Mono', monospace;
-          font-size: 11px;
-          letter-spacing: .1em;
-          text-transform: uppercase;
-          cursor: pointer;
-          transition: opacity .2s, box-shadow .2s;
+          background: var(--accent); color: #060810; border: none;
+          padding: 14px 22px; font-family: 'Share Tech Mono', monospace;
+          font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+          cursor: pointer; transition: opacity .2s, box-shadow .2s;
           clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
-          flex-shrink: 0;
-          align-self: flex-end;
-          height: 48px;
+          flex-shrink: 0; align-self: flex-end; height: 48px;
         }
         .send-btn:hover { opacity: .85; box-shadow: 0 0 20px var(--accent-glow); }
         .send-btn:disabled { opacity: .4; cursor: not-allowed; }
 
-        @media(max-width: 700px) {
-          .sidebar { display: none; }
+        /* MODAL */
+        .modal-overlay {
+          position: fixed; inset: 0; z-index: 999;
+          background: rgba(6,8,16,0.85);
+          backdrop-filter: blur(8px);
+          display: flex; align-items: center; justify-content: center;
         }
+        .modal {
+          background: var(--bg2);
+          border: 1px solid var(--border-bright);
+          padding: 48px 40px;
+          max-width: 480px; width: 90%;
+          text-align: center;
+          position: relative;
+          clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+        }
+        .modal::before {
+          content: '';
+          position: absolute; top: 0; left: 0; right: 0; height: 1px;
+          background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+        .modal-icon {
+          font-size: 32px; margin-bottom: 20px;
+        }
+        .modal-title {
+          font-family: 'Rajdhani', sans-serif;
+          font-size: 28px; font-weight: 700;
+          letter-spacing: .08em; text-transform: uppercase;
+          color: var(--text); margin-bottom: 12px;
+        }
+        .modal-title span { color: var(--accent); }
+        .modal-desc {
+          font-size: 12px; color: var(--text-dim);
+          line-height: 1.8; margin-bottom: 32px;
+        }
+        .modal-btn {
+          background: var(--accent); color: #060810;
+          border: none; padding: 14px 32px;
+          font-family: 'Share Tech Mono', monospace;
+          font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+          cursor: pointer; transition: opacity .2s, box-shadow .2s;
+          clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+        }
+        .modal-btn:hover { opacity: .85; box-shadow: 0 0 24px var(--accent-glow); }
+
+        @media(max-width: 700px) { .sidebar { display: none; } }
       `}</style>
 
+      {/* MODAL LÍMITE */}
+      {limitReached && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-icon">⚡</div>
+            <div className="modal-title">Límite <span>alcanzado</span></div>
+            <p className="modal-desc">
+              Usaste tus 20 mensajes gratuitos de este mes.<br/>
+              Pasate a Pro para acceso ilimitado y funciones avanzadas.
+            </p>
+            <button className="modal-btn" onClick={() => window.location.href = '/pricing'}>
+              Ver planes Pro →
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="chat-layout">
-        {/* SIDEBAR */}
         <aside className="sidebar">
           <div className="sidebar-logo"><span>V</span>EXTAR</div>
           <button className="new-chat-btn" onClick={newChat}>+ Nuevo chat</button>
@@ -373,7 +377,6 @@ export default function ChatPage() {
           </div>
         </aside>
 
-        {/* MAIN */}
         <main className="chat-main">
           <div className="chat-topbar">
             <span className="status-dot"></span>
@@ -411,7 +414,7 @@ export default function ChatPage() {
           </div>
 
           <div className="input-area">
-            <div className="input-wrapper">
+            <div className={`input-wrapper ${limitReached ? 'disabled' : ''}`}>
               <textarea
                 className="chat-input"
                 value={input}
@@ -422,11 +425,12 @@ export default function ChatPage() {
                     sendMessage()
                   }
                 }}
-                placeholder="Describe el código que necesitás... (Enter para enviar)"
+                placeholder={limitReached ? 'Límite mensual alcanzado' : 'Describe el código que necesitás... (Enter para enviar)'}
                 rows={1}
+                disabled={limitReached}
               />
             </div>
-            <button className="send-btn" onClick={sendMessage} disabled={loading || !input.trim()}>
+            <button className="send-btn" onClick={sendMessage} disabled={loading || !input.trim() || limitReached}>
               Enviar →
             </button>
           </div>
