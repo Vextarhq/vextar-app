@@ -16,9 +16,8 @@ export async function POST(req) {
     process.env.SUPABASE_ANON_KEY
   )
 
-  // Chequear límite si el usuario está logueado
   if (user) {
-    const month = new Date().toISOString().slice(0, 7) // "2026-04"
+    const month = new Date().toISOString().slice(0, 7)
 
     const { data: countRow } = await supabase
       .from('message_counts')
@@ -62,18 +61,6 @@ export async function POST(req) {
     if (user) {
       const month = new Date().toISOString().slice(0, 7)
 
-      // Actualizar contador
-      await supabase
-        .from('message_counts')
-        .upsert(
-          { user_id: user.id, month, count: 1 },
-          {
-            onConflict: 'user_id,month',
-            ignoreDuplicates: false
-          }
-        )
-
-      // Esto suma 1 al count existente
       await supabase.rpc('increment_message_count', {
         p_user_id: user.id,
         p_month: month
