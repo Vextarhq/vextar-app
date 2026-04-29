@@ -1,10 +1,10 @@
-import { currentUser } from '@clerk/nextjs/server'
+import { auth } from '@clerk/nextjs/server'
 import { createClient } from '@supabase/supabase-js'
 
 const FREE_LIMIT = 20
 
 export async function POST(req) {
-  const user = await currentUser()
+  const { userId } = await auth()
   const { messages, sessionId, title } = await req.json()
 
   if (!messages || !Array.isArray(messages)) {
@@ -16,13 +16,13 @@ export async function POST(req) {
     process.env.SUPABASE_ANON_KEY
   )
 
-  if (user) {
+  if (userId) {
     const month = new Date().toISOString().slice(0, 7)
 
     const { data: countRow } = await supabase
       .from('message_counts')
       .select('count')
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
       .eq('month', month)
       .single()
 
@@ -58,11 +58,11 @@ export async function POST(req) {
     const reply = data.content[0].text
     const allMessages = [...messages, { role: 'assistant', content: reply }]
 
-    if (user) {
+    if (userId) {
       const month = new Date().toISOString().slice(0, 7)
 
       await supabase.rpc('increment_message_count', {
-        p_user_id: user.id,
+        p_user_id: userId,
         p_month: month
       })
 
@@ -76,7 +76,7 @@ export async function POST(req) {
         return Response.json({ reply, sessionId })
       } else {
         const { data: created } = await supabase.from('conversations').insert({
-          user_id: user.id,
+          user_id: userId,
           title: sessionTitle,
           messages: allMessages
         }).select()
