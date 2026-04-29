@@ -1,12 +1,37 @@
 import { currentUser } from '@clerk/nextjs/server'
 import { createClient } from '@supabase/supabase-js'
 
+const FREE_LIMIT = 20
+
 export async function POST(req) {
   const user = await currentUser()
   const { messages, sessionId, title } = await req.json()
 
   if (!messages || !Array.isArray(messages)) {
     return Response.json({ error: 'Invalid request' }, { status: 400 })
+  }
+
+  const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+  )
+
+  // Chequear límite si el usuario está logueado
+  if (user) {
+    const month = new Date().toISOString().slice(0, 7) // "2026-04"
+
+    const { data: countRow } = await supabase
+      .from('message_counts')
+      .select('count')
+      .eq('user_id', user.id)
+      .eq('month', month)
+      .single()
+
+    const currentCount = countRow?.count || 0
+
+    if (currentCount >= FREE_LIMIT) {
+      return Response.json({ error: 'limit_reached', count: currentCount }, { status: 403 })
+    }
   }
 
   try {
@@ -35,10 +60,25 @@ export async function POST(req) {
     const allMessages = [...messages, { role: 'assistant', content: reply }]
 
     if (user) {
-      const supabase = createClient(
-        process.env.SUPABASE_URL,
-        process.env.SUPABASE_ANON_KEY
-      )
+      const month = new Date().toISOString().slice(0, 7)
+
+      // Actualizar contador
+      await supabase
+        .from('message_counts')
+        .upsert(
+          { user_id: user.id, month, count: 1 },
+          {
+            onConflict: 'user_id,month',
+            ignoreDuplicates: false
+          }
+        )
+
+      // Esto suma 1 al count existente
+      await supabase.rpc('increment_message_count', {
+        p_user_id: user.id,
+        p_month: month
+      })
+
       const sessionTitle = title || messages[0]?.content?.slice(0, 50) || 'New chat'
 
       if (sessionId) {
@@ -58,6 +98,7 @@ export async function POST(req) {
     }
 
     return Response.json({ reply })
+
   } catch (error) {
     console.error('Error:', error)
     return Response.json({ error: 'Internal server error' }, { status: 500 })
