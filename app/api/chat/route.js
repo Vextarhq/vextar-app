@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js'
 const FREE_LIMIT = 20
 
 export async function POST(req) {
-  const { userId } = await auth()
+  const { userId } = auth()
 console.log('userId:', userId)
   const { messages, sessionId, title } = await req.json()
 
