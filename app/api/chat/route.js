@@ -1,4 +1,4 @@
-import { currentuser } from '@clerk/nextjs/server'
+import { currentUser } from '@clerk/nextjs/server'
 import { createClient } from '@supabase/supabase-js'
 
 const FREE_LIMIT = 20
