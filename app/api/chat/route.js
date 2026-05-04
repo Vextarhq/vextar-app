@@ -5,6 +5,7 @@ const FREE_LIMIT = 20
 
 export async function POST(req) {
   const { userId } = await auth()
+console.log('userId:', userId)
   const { messages, sessionId, title } = await req.json()
 
   if (!messages || !Array.isArray(messages)) {
