@@ -1,10 +1,10 @@
-import { auth } from '@clerk/nextjs/server'
+import { getauth } from '@clerk/nextjs/server'
 import { createClient } from '@supabase/supabase-js'
 
 const FREE_LIMIT = 20
 
 export async function POST(req) {
-  const { userId } = auth()
+  const { userId } = getauth(req)
 console.log('userId:', userId)
   const { messages, sessionId, title } = await req.json()
 
