@@ -4,9 +4,7 @@ import { createClient } from '@supabase/supabase-js'
 const FREE_LIMIT = 20
 
 export async function POST(req) {
- const { userId } = await auth.protect().catch(() => ({ userId: null }))
-  const { messages, sessionId, title } = await req.json()
-
+ const { messages, sessionId, title, userId } = await req.json()
   if (!messages || !Array.isArray(messages)) {
     return Response.json({ error: 'Invalid request' }, { status: 400 })
   }
