@@ -20,7 +20,7 @@ import { useAuth } from '@clerk/nextjs'
   }, [messages, loading])
 
   async function sendMessage() {
-    if (!input.trim() || loading || limitReached || !user?.id) return
+    if (!input.trim() || loading || limitReached || !userId) return
     const userMsg = { role: 'user', content: input }
     const newMessages = [...messages, userMsg]
     setMessages(newMessages)
@@ -30,8 +30,7 @@ import { useAuth } from '@clerk/nextjs'
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-     body: JSON.stringify({ messages: newMessages, sessionId, userId: user?.id })
-})
+    body: JSON.stringify({ messages: newMessages, sessionId, userId })
     if (res.status === 403) {
       const data = await res.json()
       if (data.error === 'limit_reached') {
