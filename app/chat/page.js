@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
-import { useUser } from '@clerk/nextjs'
+import { useAuth } from '@clerk/nextjs'
 
 export default function ChatPage() {
   const [messages, setMessages] = useState([])
@@ -10,7 +10,7 @@ export default function ChatPage() {
   const [history, setHistory] = useState([])
   const [limitReached, setLimitReached] = useState(false)
   const bottomRef = useRef(null)
-const { user } = useUser()
+import { useAuth } from '@clerk/nextjs'
   useEffect(() => {
     fetch('/api/history').then(r => r.json()).then(d => setHistory(d.conversations || []))
   }, [sessionId])
