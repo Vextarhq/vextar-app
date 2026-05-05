@@ -20,7 +20,7 @@ const { user } = useUser()
   }, [messages, loading])
 
   async function sendMessage() {
-    if (!input.trim() || loading || limitReached) return
+    if (!input.trim() || loading || limitReached || !user?.id) return
     const userMsg = { role: 'user', content: input }
     const newMessages = [...messages, userMsg]
     setMessages(newMessages)
