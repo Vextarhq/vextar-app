@@ -4,6 +4,7 @@ const FREE_LIMIT = 20
 
 export async function POST(req) {
  const { messages, sessionId, title, userId } = await req.json()
+ console.log('userId recibido:', userId, 'tipo:', typeof userId)
   if (!messages || !Array.isArray(messages)) {
     return Response.json({ error: 'Invalid request' }, { status: 400 })
   }
