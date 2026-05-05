@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
+import { useUser } from '@clerk/nextjs'
 
 export default function ChatPage() {
   const [messages, setMessages] = useState([])
@@ -9,7 +10,7 @@ export default function ChatPage() {
   const [history, setHistory] = useState([])
   const [limitReached, setLimitReached] = useState(false)
   const bottomRef = useRef(null)
-
+const { user } = useUser()
   useEffect(() => {
     fetch('/api/history').then(r => r.json()).then(d => setHistory(d.conversations || []))
   }, [sessionId])
@@ -29,8 +30,7 @@ export default function ChatPage() {
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: newMessages, sessionId })
-    })
+     body: JSON.stringify({ messages: newMessages, sessionId, userId: user?.id })
 
     if (res.status === 403) {
       const data = await res.json()
