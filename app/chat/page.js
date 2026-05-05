@@ -10,7 +10,7 @@ export default function ChatPage() {
   const [history, setHistory] = useState([])
   const [limitReached, setLimitReached] = useState(false)
   const bottomRef = useRef(null)
-import { useAuth } from '@clerk/nextjs'
+const { userId } = useAuth()
   useEffect(() => {
     fetch('/api/history').then(r => r.json()).then(d => setHistory(d.conversations || []))
   }, [sessionId])
