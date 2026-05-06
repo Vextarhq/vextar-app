@@ -348,7 +348,7 @@ const { signOut } = useClerk()
         <div className="modal-overlay">
           <div className="modal">
             <div className="modal-icon">⚡</div>
-            <div className="modal-title">Límite <span>alcanzado</span></div>
+            <div className="modal-title">Limit <span>reached</span></div>
             <p className="modal-desc">
               You've used your 20 free messages this month
             </p>
