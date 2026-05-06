@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@clerk/nextjs'
-
+import { useClerk } from '@clerk/nextjs'
 export default function ChatPage() {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
@@ -11,6 +11,7 @@ export default function ChatPage() {
   const [limitReached, setLimitReached] = useState(false)
   const bottomRef = useRef(null)
 const { userId } = useAuth()
+const { signOut } = useClerk()
   useEffect(() => {
     fetch('/api/history').then(r => r.json()).then(d => setHistory(d.conversations || []))
   }, [sessionId])
@@ -375,6 +376,9 @@ const { userId } = useAuth()
               </button>
             ))}
           </div>
+            <button onClick={() => signOut({ redirectUrl: '/landing' })} className="new-chat-btn" style={{ marginTop: 'auto' }}>
+  Cerrar sesión
+</button>
         </aside>
 
         <main className="chat-main">
