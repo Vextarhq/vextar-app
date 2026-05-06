@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider afterSignInUrl="/chat" afterSignUpUrl="/chat">
       <html lang="en">
         <body>{children}</body>
       </html>
