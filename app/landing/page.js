@@ -632,16 +632,14 @@ export default function Landing() {
         <div className="cta-title reveal">Start building</div>
         <div className="cta-title-ghost reveal">with Vextar.</div>
         <p className="cta-sub reveal">No credit card required. 14-day free trial. Cancel anytime.</p>
-        <div className="cta-form reveal">
-          <input type="email" placeholder="your@email.com" />
-          <button onClick={goToLogin}>Access →</button>
-        </div>
+       <div className="reveal">
+  <button className="btn-primary" onClick={goToLogin}>Access Now →</button>
+</div>
         <p className="cta-hint reveal">Trusted by 12,000+ developers worldwide</p>
       </section>
 
       <footer>
         <div className="f-brand">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAzYAAANkCAYAAABlCb+9AAEAAElEQVR4nOz9..." alt="Vextar" />
           <span className="f-wordmark"><span>V</span>EXTAR</span>
         </div>
         <nav className="f-links">
