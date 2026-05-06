@@ -350,11 +350,10 @@ const { signOut } = useClerk()
             <div className="modal-icon">⚡</div>
             <div className="modal-title">Límite <span>alcanzado</span></div>
             <p className="modal-desc">
-              Usaste tus 20 mensajes gratuitos de este mes.<br/>
-              Pasate a Pro para acceso ilimitado y funciones avanzadas.
+              You've used your 20 free messages this month
             </p>
             <button className="modal-btn" onClick={() => window.location.href = '/pricing'}>
-              Ver planes Pro →
+              View Pro plans →
             </button>
           </div>
         </div>
@@ -363,8 +362,8 @@ const { signOut } = useClerk()
       <div className="chat-layout">
         <aside className="sidebar">
           <div className="sidebar-logo"><span>V</span>EXTAR</div>
-          <button className="new-chat-btn" onClick={newChat}>+ Nuevo chat</button>
-          <div className="sidebar-label">Conversaciones</div>
+          <button className="new-chat-btn" onClick={newChat}>+ New chat</button>
+          <div className="sidebar-label">Conversations</div>
           <div className="history-list">
             {history.map(conv => (
               <button
@@ -377,7 +376,7 @@ const { signOut } = useClerk()
             ))}
           </div>
             <button onClick={() => signOut({ redirectUrl: '/landing' })} className="new-chat-btn" style={{ marginTop: 'auto' }}>
-  Cerrar sesión
+  Sign Out
 </button>
         </aside>
 
@@ -397,7 +396,7 @@ const { signOut } = useClerk()
 
             {messages.map((m, i) => (
               <div key={i} className={`msg-row ${m.role}`}>
-                <span className="msg-label">{m.role === 'user' ? 'Tú' : 'Vextar'}</span>
+                <span className="msg-label">{m.role === 'user' ? 'You' : 'Vextar'}</span>
                 <div className={`msg-bubble ${m.role}`}>{m.content}</div>
               </div>
             ))}
@@ -409,7 +408,7 @@ const { signOut } = useClerk()
                   <div className="typing-dots">
                     <span></span><span></span><span></span>
                   </div>
-                  Procesando
+                  Processing
                 </div>
               </div>
             )}
@@ -429,13 +428,13 @@ const { signOut } = useClerk()
                     sendMessage()
                   }
                 }}
-                placeholder={limitReached ? 'Límite mensual alcanzado' : 'Describe el código que necesitás... (Enter para enviar)'}
+                placeholder={limitReached ? 'Limit reached ' : 'Describe the code you need... (Enter to send)'}
                 rows={1}
                 disabled={limitReached}
               />
             </div>
             <button className="send-btn" onClick={sendMessage} disabled={loading || !input.trim() || limitReached}>
-              Enviar →
+              Send →
             </button>
           </div>
         </main>
