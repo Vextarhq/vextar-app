@@ -3,8 +3,9 @@ import { createClient } from '@supabase/supabase-js'
 const FREE_LIMIT = 20
 
 export async function POST(req) {
- const { messages, sessionId, title, userId } = await req.json()
- console.log('userId recibido:', userId, 'tipo:', typeof userId)
+  const { messages, sessionId, title, userId } = await req.json()
+  console.log('userId recibido:', userId, 'tipo:', typeof userId)
+
   if (!messages || !Array.isArray(messages)) {
     return Response.json({ error: 'Invalid request' }, { status: 400 })
   }
@@ -15,19 +16,29 @@ export async function POST(req) {
   )
 
   if (userId) {
-    const month = new Date().toISOString().slice(0, 7)
-
-    const { data: countRow } = await supabase
-      .from('message_counts')
-      .select('count')
+    // Verificar si usuario es Pro
+    const { data: subscription } = await supabase
+      .from('subscriptions')
+      .select('status, plan')
       .eq('user_id', userId)
-      .eq('month', month)
       .single()
 
-    const currentCount = countRow?.count || 0
+    const isPro = subscription?.status === 'active' && subscription?.plan === 'pro'
 
-    if (currentCount >= FREE_LIMIT) {
-      return Response.json({ error: 'limit_reached', count: currentCount }, { status: 403 })
+    // Solo aplicar límite si NO es pro
+    if (!isPro) {
+      const month = new Date().toISOString().slice(0, 7)
+      const { data: countRow } = await supabase
+        .from('message_counts')
+        .select('count')
+        .eq('user_id', userId)
+        .eq('month', month)
+        .single()
+
+      const currentCount = countRow?.count || 0
+      if (currentCount >= FREE_LIMIT) {
+        return Response.json({ error: 'limit_reached', count: currentCount }, { status: 403 })
+      }
     }
   }
 
