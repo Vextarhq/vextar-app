@@ -3,9 +3,8 @@ import crypto from 'crypto'
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
+  process.env.SUPABASE_ANON_KEY
 )
-
 export async function POST(req) {
   const rawBody = await req.text()
   const signature = req.headers.get('paddle-signature')
