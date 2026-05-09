@@ -9,32 +9,31 @@ export default function Refund() {
       <p style={{color: '#555', fontSize: '12px', marginBottom: '60px'}}>Effective date: May 7, 2026 — Vextar, Inc.</p>
 
       <section style={{marginBottom: '40px'}}>
-        <h2 style={{color: '#00bcd4', fontSize: '13px', letterSpacing: '3px'}}>1. NO-REFUND POLICY</h2>
-        <p style={{lineHeight: '1.8', color: '#aaa'}}>All purchases and subscription payments made through Vextar are final and non-refundable. By completing a purchase, you acknowledge and agree that you are not entitled to a refund, credit, or exchange for any reason, including but not limited to: change of mind, dissatisfaction with AI-generated output, or failure to cancel before a renewal date.</p>
+        <h2 style={{color: '#00bcd4', fontSize: '13px', letterSpacing: '3px'}}>1. 14-DAY REFUND GUARANTEE</h2>
+        <p style={{lineHeight: '1.8', color: '#aaa'}}>Vextar offers a full 14-day refund window on all subscription purchases, with no exceptions or conditions. If you are unsatisfied for any reason within 14 days of your purchase, you are entitled to a full refund. No questions asked.</p>
       </section>
 
       <section style={{marginBottom: '40px'}}>
-        <h2 style={{color: '#00bcd4', fontSize: '13px', letterSpacing: '3px'}}>2. DIGITAL SERVICE</h2>
-        <p style={{lineHeight: '1.8', color: '#aaa'}}>Vextar provides immediate access to a digital SaaS product upon payment. Because access to the Service is granted instantly and the digital nature of the product makes it impossible to "return," all sales are final. This is consistent with standard digital goods and SaaS industry practices.</p>
+        <h2 style={{color: '#00bcd4', fontSize: '13px', letterSpacing: '3px'}}>2. HOW TO REQUEST A REFUND</h2>
+        <p style={{lineHeight: '1.8', color: '#aaa'}}>To request a refund, email us at <a href="mailto:support@vextar.org" style={{color: '#00bcd4'}}>support@vextar.org</a> with the subject line <strong style={{color: '#fff'}}>"Refund Request"</strong> within 14 days of your purchase. Include your registered email address and the date of the charge. Approved refunds are processed by Paddle and may take 5–10 business days to appear on your statement.</p>
       </section>
 
       <section style={{marginBottom: '40px'}}>
-        <h2 style={{color: '#00bcd4', fontSize: '13px', letterSpacing: '3px'}}>3. CANCELLATIONS</h2>
-        <p style={{lineHeight: '1.8', color: '#aaa'}}>You may cancel your subscription at any time from your account settings. Upon cancellation, you will retain access to the Service until the end of your current billing period. No partial refunds are issued for unused time remaining in a billing cycle.</p>
+        <h2 style={{color: '#00bcd4', fontSize: '13px', letterSpacing: '3px'}}>3. AFTER 14 DAYS</h2>
+        <p style={{lineHeight: '1.8', color: '#aaa'}}>Refund requests made after the 14-day window will not be eligible. Subscription renewal charges are not refundable. You may cancel your subscription at any time to avoid future charges.</p>
       </section>
 
       <section style={{marginBottom: '40px'}}>
-        <h2 style={{color: '#00bcd4', fontSize: '13px', letterSpacing: '3px'}}>4. BILLING ERRORS</h2>
-        <p style={{lineHeight: '1.8', color: '#aaa'}}>The only exception to this policy is in the case of a verified billing error or unauthorized charge. If you believe you were charged incorrectly, contact us within 7 days at <a href="mailto:support@vextar.org" style={{color: '#00bcd4'}}>support@vextar.org</a> and we will investigate. Any decision made by Vextar regarding billing disputes is final.</p>
+        <h2 style={{color: '#00bcd4', fontSize: '13px', letterSpacing: '3px'}}>4. CANCELLATIONS</h2>
+        <p style={{lineHeight: '1.8', color: '#aaa'}}>You may cancel your subscription at any time from your account settings. Upon cancellation, you retain access until the end of your current billing period.</p>
       </section>
 
       <section style={{marginBottom: '60px'}}>
         <h2 style={{color: '#00bcd4', fontSize: '13px', letterSpacing: '3px'}}>5. CONTACT</h2>
-        <p style={{lineHeight: '1.8', color: '#aaa'}}>For billing questions contact us at:<br/>
-        <a href="mailto:support@vextar.org" style={{color: '#00bcd4'}}>support@vextar.org</a></p>
+        <p style={{lineHeight: '1.8', color: '#aaa'}}>For refund requests: <a href="mailto:support@vextar.org" style={{color: '#00bcd4'}}>support@vextar.org</a></p>
       </section>
 
       <p style={{color: '#333', fontSize: '11px', borderTop: '1px solid #1a1a1a', paddingTop: '20px'}}>© 2026 Vextar, Inc. All rights reserved.</p>
     </main>
-  );
+  )
 }
