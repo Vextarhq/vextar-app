@@ -1,15 +1,19 @@
 import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-)
 export async function POST(req) {
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+    return Response.json({ error: 'Not configured' }, { status: 503 })
+  }
+
+  const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+  )
+
   const rawBody = await req.text()
   const signature = req.headers.get('paddle-signature')
 
-  // Verificar firma de Paddle
   if (!verifyPaddleSignature(rawBody, signature, process.env.PADDLE_WEBHOOK_SECRET)) {
     return Response.json({ error: 'Invalid signature' }, { status: 401 })
   }
@@ -20,7 +24,6 @@ export async function POST(req) {
   if (event_type === 'subscription.activated' || event_type === 'subscription.updated') {
     const userId = data.custom_data?.userId
     if (!userId) return Response.json({ ok: true })
-
     await supabase.from('subscriptions').upsert({
       user_id: userId,
       paddle_subscription_id: data.id,
@@ -35,7 +38,6 @@ export async function POST(req) {
   if (event_type === 'subscription.canceled' || event_type === 'subscription.paused') {
     const userId = data.custom_data?.userId
     if (!userId) return Response.json({ ok: true })
-
     await supabase.from('subscriptions').upsert({
       user_id: userId,
       paddle_subscription_id: data.id,
