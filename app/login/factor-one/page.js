@@ -19,10 +19,10 @@ export default function FactorOne() {
         password
       })
       if (result.status === 'complete') {
-        router.push('/app')
+        router.push('/chat')
       }
     } catch (err) {
-      setError('Contraseña incorrecta')
+      setError(err.errors?.[0]?.message || 'Contraseña incorrecta')
     }
   }
 
