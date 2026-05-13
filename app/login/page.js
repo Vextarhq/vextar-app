@@ -1,15 +1,9 @@
-import { SignIn } from '@clerk/nextjs'
+'use client'
+import { useEffect } from 'react'
 
-export default function LoginPage() {
-  return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#060810',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }}>
-      <SignIn fallbackRedirectUrl="/app" />
-    </div>
-  )
+export default function FactorOne() {
+  useEffect(() => {
+    window.location.href = '/login'
+  }, [])
+  return null
 }
