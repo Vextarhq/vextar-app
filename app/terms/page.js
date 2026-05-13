@@ -30,7 +30,7 @@ export default function Terms() {
 
       <section style={{marginBottom: '40px'}}>
         <h2 style={{color: '#00bcd4', fontSize: '13px', letterSpacing: '3px'}}>5. REFUND POLICY</h2>
-        <p style={{lineHeight: '1.8', color: '#aaa'}}>Refund requests are evaluated on a case-by-case basis. If you believe you are entitled to a refund, contact us at support@vextar.org within 7 days of the charge. We do not offer refunds for partial subscription periods or for usage already consumed. All refund decisions are final.</p>
+        <p style={{lineHeight: '1.8', color: '#aaa'}}>Refund requests are evaluated on a case-by-case basis. If you believe you are entitled to a refund, contact us at support@vextar.org within 14 days of the charge. We do not offer refunds for partial subscription periods or for usage already consumed. All refund decisions are final.</p>
       </section>
 
       <section style={{marginBottom: '40px'}}>
