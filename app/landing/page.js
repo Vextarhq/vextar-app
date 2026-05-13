@@ -631,7 +631,7 @@ export default function Landing() {
       <section className="cta-section" id="pricing">
         <div className="cta-title reveal">Start building</div>
         <div className="cta-title-ghost reveal">with Vextar.</div>
-        <p className="cta-sub reveal">No credit card required. 14-day free trial. Cancel anytime.</p>
+        <p className="cta-sub reveal">No credit card required. 20 free messages. Cancel anytime.</p>
        <div className="reveal">
   <button className="btn-primary" onClick={goToLogin}>Access Now →</button>
 </div>
