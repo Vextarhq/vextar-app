@@ -20,7 +20,7 @@ export default function FactorOne() {
       })
       if (result.status === 'complete') {
   await setActive({ session: result.createdSessionId })
-  window.location.href = '/chat'
+  window.location.replace('https://www.vextar.org/chat')
 }
     } catch (err) {
       setError(err.errors?.[0]?.longMessage || err.errors?.[0]?.message || 'Contraseña incorrecta')
