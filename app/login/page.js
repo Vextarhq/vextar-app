@@ -28,7 +28,7 @@ useEffect(() => {
       })
       if (result.status === 'complete') {
         await setActive({ session: result.createdSessionId })
-        window.location.href = '/chat'
+        window.location.assign('https://www.vextar.org/chat')
       }
     } catch (err) {
       setError(err.errors?.[0]?.longMessage || 'Email o contraseña incorrectos')
