@@ -9,7 +9,7 @@ export default function LoginPage() {
       alignItems: 'center',
       justifyContent: 'center'
     }}>
-      <SignIn afterSignInUrl="/app" afterSignUpUrl="/app" />
+      <SignIn fallbackRedirectUrl="/app" />
     </div>
   )
 }
