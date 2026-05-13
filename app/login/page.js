@@ -1,7 +1,7 @@
 'use client'
 import { useSignIn } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function LoginPage() {
   const { signIn, isLoaded, setActive } = useSignIn()
@@ -11,7 +11,11 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-
+useEffect(() => {
+  if (isLoaded && signIn?.status === 'complete') {
+    window.location.href = '/chat'
+  }
+}, [isLoaded])
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!isLoaded) return
