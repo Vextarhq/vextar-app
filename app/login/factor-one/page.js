@@ -8,6 +8,7 @@ export default function FactorOne() {
   const router = useRouter()
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -31,23 +32,77 @@ export default function FactorOne() {
       background: '#060810',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center',
-      color: 'white'
+      justifyContent: 'center'
     }}>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '320px' }}>
-        <h2 style={{ textAlign: 'center' }}>Ingresá tu contraseña</h2>
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={{ padding: '12px', borderRadius: '8px', border: '1px solid #333', background: '#0f1318', color: 'white' }}
-        />
-        {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
-        <button type="submit" style={{ padding: '12px', borderRadius: '8px', background: '#4f46e5', color: 'white', border: 'none', cursor: 'pointer' }}>
-          Continuar
-        </button>
-      </form>
+      <div style={{
+        background: 'white',
+        borderRadius: '12px',
+        padding: '32px',
+        width: '360px',
+        boxShadow: '0 4px 24px rgba(0,0,0,0.3)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '16px'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#111' }}>Sign in to Vextar</h2>
+          <p style={{ color: '#666', fontSize: '14px', marginTop: '4px' }}>Enter your password to continue</p>
+        </div>
+
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ position: 'relative' }}>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '10px 40px 10px 12px',
+                borderRadius: '8px',
+                border: '1px solid #ddd',
+                fontSize: '14px',
+                boxSizing: 'border-box',
+                outline: 'none'
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                color: '#666',
+                fontSize: '13px'
+              }}
+            >
+              {showPassword ? 'Ocultar' : 'Ver'}
+            </button>
+          </div>
+
+          {error && <p style={{ color: 'red', fontSize: '13px', textAlign: 'center' }}>{error}</p>}
+
+          <button type="submit" style={{
+            padding: '10px',
+            borderRadius: '8px',
+            background: '#111',
+            color: 'white',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: '14px',
+            fontWeight: '600'
+          }}>
+            Continue →
+          </button>
+        </form>
+
+        <p style={{ textAlign: 'center', fontSize: '12px', color: '#999' }}>Secured by Clerk</p>
+      </div>
     </div>
   )
 }
