@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 
 export default function FactorOne() {
   useEffect(() => {
-    window.location.href = '/login'
+    window.location.href = '/chat'
   }, [])
   return null
 }
