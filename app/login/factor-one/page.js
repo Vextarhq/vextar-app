@@ -19,9 +19,9 @@ export default function FactorOne() {
         password
       })
       if (result.status === 'complete') {
-        await setActive({ session: result.createdSessionId })
-        router.push('/chat')
-      }
+  await setActive({ session: result.createdSessionId })
+  window.location.href = '/chat'
+}
     } catch (err) {
       setError(err.errors?.[0]?.longMessage || err.errors?.[0]?.message || 'Contraseña incorrecta')
     }
