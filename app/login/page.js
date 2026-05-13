@@ -1,9 +1,15 @@
-'use client'
-import { useEffect } from 'react'
+import { SignIn } from '@clerk/nextjs'
 
-export default function FactorOne() {
-  useEffect(() => {
-    window.location.href = '/login'
-  }, [])
-  return null
+export default function LoginPage() {
+  return (
+    <div style={{
+      minHeight: '100vh',
+      background: '#060810',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      <SignIn forceRedirectUrl="/chat" />
+    </div>
+  )
 }
