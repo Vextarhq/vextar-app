@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 export default function FactorOne() {
-  const { signIn, isLoaded } = useSignIn()
+  const { signIn, isLoaded, setActive } = useSignIn()
   const router = useRouter()
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -19,10 +19,11 @@ export default function FactorOne() {
         password
       })
       if (result.status === 'complete') {
+        await setActive({ session: result.createdSessionId })
         router.push('/chat')
       }
     } catch (err) {
-      setError(err.errors?.[0]?.message || 'Contraseña incorrecta')
+      setError(err.errors?.[0]?.longMessage || err.errors?.[0]?.message || 'Contraseña incorrecta')
     }
   }
 
