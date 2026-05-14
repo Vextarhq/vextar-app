@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 
-const FREE_LIMIT = 20
+const FREE_LIMIT = 40
 
 export async function POST(req) {
   const { messages, sessionId, title, userId } = await req.json()
