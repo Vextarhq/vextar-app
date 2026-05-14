@@ -350,7 +350,7 @@ const { signOut } = useClerk()
             <div className="modal-icon">⚡</div>
             <div className="modal-title">Limit <span>reached</span></div>
             <p className="modal-desc">
-              You've used your 20 free messages this month
+              You've used your 40 free messages this month
             </p>
             <button className="modal-btn" onClick={() => window.location.href = '/pricing'}>
               View Pro plans →
