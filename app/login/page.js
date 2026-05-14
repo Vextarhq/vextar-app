@@ -1,25 +1,21 @@
 'use client'
-import { useAuth } from '@clerk/nextjs'
-import { useRouter } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useAuth, useSignIn } from '@clerk/nextjs'
+import { useState } from 'react'
 
 export default function LoginPage() {
- const { isSignedIn, isLoaded: authLoaded } = useAuth()
-if (authLoaded && isSignedIn) {
-  window.location.href = 'https://www.vextar.org/chat'
-  return null
-}
-  const router = useRouter()
+  const { isSignedIn, isLoaded: authLoaded } = useAuth()
+  const { signIn, isLoaded, setActive } = useSignIn()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-useEffect(() => {
-  if (isLoaded && signIn?.status === 'complete') {
-    window.location.href = '/chat'
+
+  if (authLoaded && isSignedIn) {
+    window.location.href = 'https://www.vextar.org/chat'
+    return null
   }
-}, [isLoaded])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!isLoaded) return
@@ -32,7 +28,7 @@ useEffect(() => {
       })
       if (result.status === 'complete') {
         await setActive({ session: result.createdSessionId })
-        window.location.assign('https://www.vextar.org/chat')
+        window.location.href = 'https://www.vextar.org/chat'
       }
     } catch (err) {
       setError(err.errors?.[0]?.longMessage || 'Email o contraseña incorrectos')
@@ -62,7 +58,6 @@ useEffect(() => {
           <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#111' }}>Sign in to Vextar</h2>
           <p style={{ color: '#666', fontSize: '14px', marginTop: '4px' }}>Welcome back! Please sign in to continue</p>
         </div>
-
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <input
             type="email"
@@ -84,14 +79,11 @@ useEffect(() => {
               {showPassword ? 'Ocultar' : 'Ver'}
             </button>
           </div>
-
           {error && <p style={{ color: 'red', fontSize: '13px', textAlign: 'center' }}>{error}</p>}
-
           <button type="submit" disabled={loading} style={{ padding: '10px', borderRadius: '8px', background: '#111', color: 'white', border: 'none', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}>
             {loading ? 'Cargando...' : 'Continue →'}
           </button>
         </form>
-
         <p style={{ textAlign: 'center', fontSize: '12px', color: '#999' }}>Secured by Clerk</p>
       </div>
     </div>
