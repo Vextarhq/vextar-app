@@ -84,6 +84,9 @@ export default function LoginPage() {
             {loading ? 'Cargando...' : 'Continue →'}
           </button>
         </form>
+            <p style={{ textAlign: 'center', fontSize: '13px', color: '#666' }}>
+  Don't have an account? <a href="/sign-up" style={{ color: '#111', fontWeight: '600' }}>Sign up</a>
+</p>
         <p style={{ textAlign: 'center', fontSize: '12px', color: '#999' }}>Secured by Clerk</p>
       </div>
     </div>
