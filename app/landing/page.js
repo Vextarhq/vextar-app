@@ -646,8 +646,6 @@ export default function Landing() {
           <a href="/privacy">Privacy</a>
 <a href="/terms">Terms</a>
 <a href="/refund">Refund</a>
-<a href="#">Docs</a>
-<a href="#">Status</a>
         </nav>
         <span className="f-copy">© 2026 Vextar, Inc.</span>
       </footer>
