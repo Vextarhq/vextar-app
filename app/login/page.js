@@ -4,7 +4,11 @@ import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 
 export default function LoginPage() {
-  const { signIn, isLoaded, setActive } = useSignIn()
+ const { isSignedIn, isLoaded: authLoaded } = useAuth()
+if (authLoaded && isSignedIn) {
+  window.location.href = 'https://www.vextar.org/chat'
+  return null
+}
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
