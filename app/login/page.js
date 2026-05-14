@@ -1,5 +1,5 @@
 'use client'
-import { useSignIn } from '@clerk/nextjs'
+import { useAuth } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 
