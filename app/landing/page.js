@@ -631,7 +631,7 @@ export default function Landing() {
       <section className="cta-section" id="pricing">
         <div className="cta-title reveal">Start building</div>
         <div className="cta-title-ghost reveal">with Vextar.</div>
-        <p className="cta-sub reveal">No credit card required. 20 free messages. Cancel anytime.</p>
+        <p className="cta-sub reveal">No credit card required. 40 free messages. Cancel anytime.</p>
        <div className="reveal">
   <button className="btn-primary" onClick={goToLogin}>Access Now →</button>
 </div>
@@ -643,11 +643,11 @@ export default function Landing() {
           <span className="f-wordmark"><span>V</span>EXTAR</span>
         </div>
         <nav className="f-links">
-          <a href="#">Privacy</a>
-          <a href="#">Terms</a>
-          <a href="#">Docs</a>
-          <a href="#">Status</a>
-          <a href="#">Blog</a>
+          <a href="/privacy">Privacy</a>
+<a href="/terms">Terms</a>
+<a href="/refund">Refund</a>
+<a href="#">Docs</a>
+<a href="#">Status</a>
         </nav>
         <span className="f-copy">© 2026 Vextar, Inc.</span>
       </footer>
