@@ -12,35 +12,35 @@ export async function POST(req) {
   )
 
   const rawBody = await req.text()
-  const signature = req.headers.get('paddle-signature')
+  const signature = req.headers.get('x-signature')
 
-  if (!verifyPaddleSignature(rawBody, signature, process.env.PADDLE_WEBHOOK_SECRET)) {
+  if (!verifySignature(rawBody, signature, process.env.LEMONSQUEEZY_WEBHOOK_SECRET)) {
     return Response.json({ error: 'Invalid signature' }, { status: 401 })
   }
 
   const event = JSON.parse(rawBody)
-  const { event_type, data } = event
+  const eventName = event.meta?.event_name
+  const data = event.data?.attributes
+  const userId = event.meta?.custom_data?.userId
 
-  if (event_type === 'subscription.activated' || event_type === 'subscription.updated') {
-    const userId = data.custom_data?.userId
+  if (eventName === 'subscription_created' || eventName === 'subscription_updated') {
     if (!userId) return Response.json({ ok: true })
     await supabase.from('subscriptions').upsert({
       user_id: userId,
-      paddle_subscription_id: data.id,
-      paddle_customer_id: data.customer_id,
+      ls_subscription_id: event.data?.id,
+      ls_customer_id: data?.customer_id,
       status: 'active',
       plan: 'pro',
-      current_period_end: data.current_billing_period?.ends_at,
+      current_period_end: data?.renews_at,
       updated_at: new Date().toISOString()
     }, { onConflict: 'user_id' })
   }
 
-  if (event_type === 'subscription.canceled' || event_type === 'subscription.paused') {
-    const userId = data.custom_data?.userId
+  if (eventName === 'subscription_cancelled') {
     if (!userId) return Response.json({ ok: true })
     await supabase.from('subscriptions').upsert({
       user_id: userId,
-      paddle_subscription_id: data.id,
+      ls_subscription_id: event.data?.id,
       status: 'canceled',
       plan: 'free',
       updated_at: new Date().toISOString()
@@ -50,15 +50,12 @@ export async function POST(req) {
   return Response.json({ ok: true })
 }
 
-function verifyPaddleSignature(rawBody, signature, secret) {
+function verifySignature(rawBody, signature, secret) {
   if (!signature || !secret) return false
   try {
-    const parts = Object.fromEntries(signature.split(';').map(p => p.split('=')))
-    const ts = parts.ts
-    const h1 = parts.h1
-    const signed = `${ts}:${rawBody}`
-    const expected = crypto.createHmac('sha256', secret).update(signed).digest('hex')
-    return expected === h1
+    const hmac = crypto.createHmac('sha256', secret)
+    const digest = hmac.update(rawBody).digest('hex')
+    return digest === signature
   } catch {
     return false
   }
