@@ -21,7 +21,7 @@ export async function POST(req) {
   const event = JSON.parse(rawBody)
   const eventName = event.meta?.event_name
   const data = event.data?.attributes
-  const userId = event.meta?.custom_data?.userId
+  const userId = event.meta?.custom_data?.user_id
 
   if (eventName === 'subscription_created' || eventName === 'subscription_updated') {
     if (!userId) return Response.json({ ok: true })
