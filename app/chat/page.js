@@ -358,9 +358,9 @@ const { signOut } = useClerk()
           </div>
         </div>
       )}
-
+<div className={`sidebar-overlay ${sidebarOpen ? 'open' : ''}`} onClick={() => setSidebarOpen(false)} />
       <div className="chat-layout">
-        <aside className="sidebar">
+        <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
           <div className="sidebar-logo"><span>V</span>EXTAR</div>
           <button className="new-chat-btn" onClick={newChat}>+ New chat</button>
           <div className="sidebar-label">Conversations</div>
@@ -382,7 +382,10 @@ const { signOut } = useClerk()
 
         <main className="chat-main">
           <div className="chat-topbar">
-            <span className="status-dot"></span>
+  <button className="hamburger-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
+    <span></span><span></span><span></span>
+  </button>
+  <span className="status-dot"></span>
             <span className="topbar-text">Vextar AI — Online</span>
           </div>
 
