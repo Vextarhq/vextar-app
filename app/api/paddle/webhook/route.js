@@ -51,5 +51,12 @@ export async function POST(req) {
 }
 
 function verifySignature(rawBody, signature, secret) {
-  return true
+  if (!signature || !secret) return false
+  try {
+    const hmac = crypto.createHmac('sha256', secret)
+    const digest = hmac.update(rawBody).digest('hex')
+    return digest === signature
+  } catch {
+    return false
+  }
 }
