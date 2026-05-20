@@ -12,7 +12,7 @@ export default function PricingPage() {
       window.location.href = '/login'
       return
     }
-    window.location.href = `${url}?checkout[custom][userId]=${userId}`
+    window.location.href = `${url}?checkout[custom][user_id]=${userId}`
   }
 
   return (
