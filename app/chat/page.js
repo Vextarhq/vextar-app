@@ -184,7 +184,6 @@ export default function ChatPage() {
 <button onClick={() => signOut({ redirectUrl: '/landing' })} className="new-chat-btn" style={{ marginTop: '12px' }}>
   Sign Out
 </button>
-          </button>
         </aside>
 
         <main className="chat-main">
