@@ -39,12 +39,15 @@ const userEmail = event.data?.attributes?.user_email
   if (eventName === 'subscription_cancelled') {
     if (!userId) return Response.json({ ok: true })
     await supabase.from('subscriptions').upsert({
-      user_id: userId,
-      ls_subscription_id: event.data?.id,
-      status: 'canceled',
-      plan: 'free',
-      updated_at: new Date().toISOString()
-    }, { onConflict: 'user_id' })
+  user_id: userId,
+  ls_subscription_id: event.data?.id,
+  ls_customer_id: data?.customer_id,
+  email: userEmail,
+  status: 'active',
+  plan: 'pro',
+  current_period_end: data?.renews_at,
+  updated_at: new Date().toISOString()
+}, { onConflict: 'user_id' })
   }
 
   return Response.json({ ok: true })
