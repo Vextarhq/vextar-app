@@ -178,8 +178,12 @@ export default function ChatPage() {
               </button>
             ))}
           </div>
-          <button onClick={() => signOut({ redirectUrl: '/landing' })} className="new-chat-btn" style={{ marginTop: 'auto' }}>
-            Sign Out
+          <button onClick={() => window.location.href = '/pricing'} className="new-chat-btn" style={{ background: 'rgba(107,184,212,0.15)', borderColor: 'rgba(107,184,212,0.6)' }}>
+  ⚡ Upgrade to Pro
+</button>
+<button onClick={() => signOut({ redirectUrl: '/landing' })} className="new-chat-btn" style={{ marginTop: '12px' }}>
+  Sign Out
+</button>
           </button>
         </aside>
 
