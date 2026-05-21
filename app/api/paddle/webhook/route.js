@@ -29,6 +29,7 @@ const userEmail = event.data?.attributes?.user_email
       user_id: userId,
       ls_subscription_id: event.data?.id,
       ls_customer_id: data?.customer_id,
+      email: userEmail,
       status: 'active',
       plan: 'pro',
       current_period_end: data?.renews_at,
