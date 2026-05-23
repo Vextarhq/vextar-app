@@ -25,7 +25,7 @@ export default function Terms() {
 
       <section style={{marginBottom: '40px'}}>
         <h2 style={{color: '#00bcd4', fontSize: '13px', letterSpacing: '3px'}}>4. SUBSCRIPTIONS & PAYMENTS</h2>
-        <p style={{lineHeight: '1.8', color: '#aaa'}}>Vextar offers paid subscription plans. All payments are processed securely through Paddle, our Merchant of Record. By subscribing, you authorize Paddle to charge your payment method on a recurring basis according to your selected plan. Prices are listed in USD and may be subject to local taxes depending on your jurisdiction, which Paddle handles automatically. You can cancel your subscription at any time from your account settings. Cancellation takes effect at the end of the current billing period.</p>
+        <p style={{lineHeight: '1.8', color: '#aaa'}}>Vextar offers paid subscription plans. All payments are processed securely through Lemon Squeezy, our Merchant of Record. By subscribing, you authorize Lemon Squeezy to charge your payment method on a recurring basis according to your selected plan. Prices are listed in USD and may be subject to local taxes depending on your jurisdiction, which Paddle handles automatically. You can cancel your subscription at any time from your account settings. Cancellation takes effect at the end of the current billing period.</p>
       </section>
 
       <section style={{marginBottom: '40px'}}>
