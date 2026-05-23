@@ -15,7 +15,7 @@ export default function Refund() {
 
       <section style={{marginBottom: '40px'}}>
         <h2 style={{color: '#00bcd4', fontSize: '13px', letterSpacing: '3px'}}>2. HOW TO REQUEST A REFUND</h2>
-        <p style={{lineHeight: '1.8', color: '#aaa'}}>To request a refund, email us at <a href="mailto:support@vextar.org" style={{color: '#00bcd4'}}>support@vextar.org</a> with the subject line <strong style={{color: '#fff'}}>"Refund Request"</strong> within 14 days of your purchase. Include your registered email address and the date of the charge. Approved refunds are processed by Paddle and may take 5–10 business days to appear on your statement.</p>
+        <p style={{lineHeight: '1.8', color: '#aaa'}}>To request a refund, email us at <a href="mailto:support@vextar.org" style={{color: '#00bcd4'}}>support@vextar.org</a> with the subject line <strong style={{color: '#fff'}}>"Refund Request"</strong> within 14 days of your purchase. Include your registered email address and the date of the charge. Approved refunds are processed by Lemon Squeezy and may take 5–10 business days to appear on your statement.</p>
       </section>
 
       <section style={{marginBottom: '40px'}}>
