@@ -19,7 +19,7 @@ export default function Privacy() {
         <ul style={{color: '#aaa', lineHeight: '2', paddingLeft: '20px'}}>
           <li><strong style={{color: '#fff'}}>Account information:</strong> Your name, email address, and authentication data provided during registration via Clerk.</li>
           <li><strong style={{color: '#fff'}}>Conversation data:</strong> The prompts and messages you send to Vextar, along with the AI-generated responses. These are stored securely in our database (Supabase) to provide conversation history.</li>
-          <li><strong style={{color: '#fff'}}>Payment information:</strong> Billing and payment data is collected and processed exclusively by Paddle, our Merchant of Record. Vextar does not store your credit card or banking details.</li>
+          <li><strong style={{color: '#fff'}}>Payment information:</strong> Billing and payment data is collected and processed exclusively by lemon squeezy, our Merchant of Record. Vextar does not store your credit card or banking details.</li>
           <li><strong style={{color: '#fff'}}>Usage data:</strong> Technical information such as your IP address, browser type, device type, and pages visited, collected automatically when you use the Service.</li>
         </ul>
       </section>
@@ -56,7 +56,7 @@ export default function Privacy() {
         <ul style={{color: '#aaa', lineHeight: '2', paddingLeft: '20px'}}>
           <li><strong style={{color: '#fff'}}>Clerk</strong> — Authentication and user management. <a href="https://clerk.com/privacy" style={{color: '#00bcd4'}}>clerk.com/privacy</a></li>
           <li><strong style={{color: '#fff'}}>Supabase</strong> — Database and storage. <a href="https://supabase.com/privacy" style={{color: '#00bcd4'}}>supabase.com/privacy</a></li>
-          <li><strong style={{color: '#fff'}}>Paddle</strong> — Payment processing and subscription management. <a href="https://www.paddle.com/legal/privacy" style={{color: '#00bcd4'}}>paddle.com/legal/privacy</a></li>
+          <li><strong style={{color: '#fff'}}>Lemon Squeezy</strong> — Payment processing and subscription management. <a href="lemonsqueezy.com/privacy" style={{color: '#00bcd4'}}>lemonsqueezy.com/privacy</a></li>
           <li><strong style={{color: '#fff'}}>Anthropic (Claude)</strong> — AI model provider. <a href="https://www.anthropic.com/privacy" style={{color: '#00bcd4'}}>anthropic.com/privacy</a></li>
           <li><strong style={{color: '#fff'}}>Vercel</strong> — Hosting and deployment. <a href="https://vercel.com/legal/privacy-policy" style={{color: '#00bcd4'}}>vercel.com/legal/privacy-policy</a></li>
         </ul>
