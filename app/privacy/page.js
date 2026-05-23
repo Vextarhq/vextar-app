@@ -56,7 +56,7 @@ export default function Privacy() {
         <ul style={{color: '#aaa', lineHeight: '2', paddingLeft: '20px'}}>
           <li><strong style={{color: '#fff'}}>Clerk</strong> — Authentication and user management. <a href="https://clerk.com/privacy" style={{color: '#00bcd4'}}>clerk.com/privacy</a></li>
           <li><strong style={{color: '#fff'}}>Supabase</strong> — Database and storage. <a href="https://supabase.com/privacy" style={{color: '#00bcd4'}}>supabase.com/privacy</a></li>
-          <li><strong style={{color: '#fff'}}>Lemon Squeezy</strong> — Payment processing and subscription management. <a href="lemonsqueezy.com/privacy" style={{color: '#00bcd4'}}>lemonsqueezy.com/privacy</a></li>
+          <li><strong style={{color: '#fff'}}>Lemon Squeezy</strong> — Payment processing and subscription management. <a href="https://www.lemonsqueezy.com/privacy" style={{color: '#00bcd4'}}>lemonsqueezy.com/privacy</a></li>
           <li><strong style={{color: '#fff'}}>Anthropic (Claude)</strong> — AI model provider. <a href="https://www.anthropic.com/privacy" style={{color: '#00bcd4'}}>anthropic.com/privacy</a></li>
           <li><strong style={{color: '#fff'}}>Vercel</strong> — Hosting and deployment. <a href="https://vercel.com/legal/privacy-policy" style={{color: '#00bcd4'}}>vercel.com/legal/privacy-policy</a></li>
         </ul>
