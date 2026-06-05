@@ -51,7 +51,7 @@ export async function POST(req) {
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6-20250929',
+        model: 'claude-sonnet-4-6',
         max_tokens: 16000,
         system: `You are Vextar, an elite AI-powered coding assistant built for professional developers and entrepreneurs. You combine deep technical expertise with real-world practicality.
 
