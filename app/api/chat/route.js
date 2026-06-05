@@ -52,7 +52,7 @@ export async function POST(req) {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-5-20250929',
-        max_tokens: 4096,
+        max_tokens: 8096,
         system: `You are Vextar, an elite AI-powered professional coding assistant. You are precise, efficient, and expert-level.`,
         messages: messages
       })
