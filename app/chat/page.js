@@ -220,7 +220,7 @@ export default function ChatPage() {
         .history-item.active { color: var(--accent); border-color: var(--border-bright); background: var(--accent-glow); }
         .chat-main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
         .chat-topbar { height: 56px; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 24px; gap: 12px; flex-shrink: 0; background: var(--bg); z-index: 10; }
-        .hamburger-btn { display: none; background: transparent; border: none; cursor: pointer; padding: 4px; flex-direction: column; gap: 5px; flex-shrink: 0; }
+        .hamburger-btn { display: flex; background: transparent; border: none; cursor: pointer; padding: 4px; flex-direction: column; gap: 5px; flex-shrink: 0; }
         .hamburger-btn span { display: block; width: 20px; height: 2px; background: var(--accent); }
         .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: blink 2s ease-in-out infinite; flex-shrink: 0; }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
