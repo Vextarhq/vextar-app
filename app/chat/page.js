@@ -223,7 +223,7 @@ export default function ChatPage() {
         .history-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
         .history-list::-webkit-scrollbar { width: 3px; }
         .history-list::-webkit-scrollbar-thumb { background: var(--border); }
-        .history-item { background: transparent; color: var(--text-dim); border: 1px solid transparent; padding: 9px 12px; cursor: pointer; text-align: left; font-size: 12px; font-family: 'Share Tech Mono', monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: all .2s; border-radius: 2px; }
+        .history-item { background: transparent; color: var(--text-dim); border: 1px solid transparent; padding: 9px 12px; cursor: pointer; text-align: left; font-size: 12px; font-family: 'Share Tech Mono', monospace; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; transition: all .2s; border-radius: 2px; }
         .history-item:hover { color: var(--text); border-color: var(--border); background: rgba(255,255,255,0.03); }
         .history-item.active { color: var(--accent); border-color: var(--border-bright); background: var(--accent-glow); }
         .chat-main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
