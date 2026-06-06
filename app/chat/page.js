@@ -14,7 +14,7 @@ function CodeBlock({ code, language }) {
     <div style={{ position: 'relative', margin: '12px 0', background: '#060810', border: '1px solid rgba(107,184,212,0.25)', borderRadius: '4px', overflow: 'hidden' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 16px', background: 'rgba(107,184,212,0.08)', borderBottom: '1px solid rgba(107,184,212,0.15)' }}>
         <span style={{ fontSize: '10px', letterSpacing: '.15em', textTransform: 'uppercase', color: 'rgba(107,184,212,0.6)', fontFamily: "'Share Tech Mono', monospace" }}>{language || 'code'}</span>
-        <button onClick={handleCopy} style={{ background: copied ? 'rgba(107,184,212,0.3)' : 'transparent', color: copied ? '#6bb8d4' : 'rgba(232,237,242,0.4)', border: '1px solid', borderColor: copied ? 'rgba(107,184,212,0.6)' : 'rgba(255,255,255,0.1)', padding: '4px 12px', fontFamily: "'Share Tech Mono', monospace", fontSize: '10px', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .2s' }}>
+        <button onClick={handleCopy} style={{ background: copied ? 'rgba(107,184,212,0.3)' : 'transparent', color: copied ? '#6bb8d4' : 'rgba(232,237,242,0.4)', border: '1px solid', borderColor: copied ? 'rgba(107,184,212,0.6)' : 'rgba(255,255,255,0.1)', padding: '4px 12px', fontFamily: "'Share Tech Mono', monospace", fontSize: '10px', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .2s', borderRadius: '2px' }}>
           {copied ? '✓ Copied' : 'Copy'}
         </button>
       </div>
@@ -25,27 +25,101 @@ function CodeBlock({ code, language }) {
   )
 }
 
+function renderInline(text) {
+  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)/g)
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={i} style={{ color: '#e8edf2', fontWeight: 600 }}>{part.slice(2, -2)}</strong>
+    }
+    if (part.startsWith('*') && part.endsWith('*')) {
+      return <em key={i}>{part.slice(1, -1)}</em>
+    }
+    if (part.startsWith('`') && part.endsWith('`')) {
+      return <code key={i} style={{ background: 'rgba(107,184,212,0.1)', color: '#6bb8d4', padding: '1px 6px', borderRadius: '3px', fontSize: '11px', fontFamily: "'Share Tech Mono', monospace" }}>{part.slice(1, -1)}</code>
+    }
+    return part
+  })
+}
+
 function MessageContent({ content }) {
-  const parts = []
-  const regex = /```(\w*)\n?([\s\S]*?)```/g
+  const codeBlockRegex = /```(\w*)\n?([\s\S]*?)```/g
+  const segments = []
   let lastIndex = 0
   let match
-  while ((match = regex.exec(content)) !== null) {
+
+  while ((match = codeBlockRegex.exec(content)) !== null) {
     if (match.index > lastIndex) {
-      parts.push({ type: 'text', content: content.slice(lastIndex, match.index) })
+      segments.push({ type: 'text', content: content.slice(lastIndex, match.index) })
     }
-    parts.push({ type: 'code', language: match[1], content: match[2] })
+    segments.push({ type: 'code', language: match[1], content: match[2] })
     lastIndex = match.index + match[0].length
   }
   if (lastIndex < content.length) {
-    parts.push({ type: 'text', content: content.slice(lastIndex) })
+    segments.push({ type: 'text', content: content.slice(lastIndex) })
   }
+
+  function renderText(text) {
+    const lines = text.split('\n')
+    const result = []
+    let i = 0
+    while (i < lines.length) {
+      const line = lines[i]
+      if (line.trim() === '') {
+        result.push(<div key={i} style={{ height: '8px' }} />)
+      } else if (/^#{1,3}\s/.test(line)) {
+        const level = line.match(/^(#+)/)[1].length
+        const txt = line.replace(/^#+\s/, '')
+        const sizes = { 1: '18px', 2: '15px', 3: '13px' }
+        result.push(<div key={i} style={{ fontSize: sizes[level] || '13px', fontWeight: 700, color: '#6bb8d4', margin: '12px 0 6px', fontFamily: "'Rajdhani', sans-serif", letterSpacing: '.05em' }}>{renderInline(txt)}</div>)
+      } else if (/^[-*]\s/.test(line.trim())) {
+        const items = []
+        while (i < lines.length && /^[-*]\s/.test(lines[i].trim())) {
+          items.push(lines[i].trim().replace(/^[-*]\s/, ''))
+          i++
+        }
+        result.push(
+          <ul key={i} style={{ paddingLeft: '16px', margin: '6px 0', listStyle: 'none' }}>
+            {items.map((item, j) => (
+              <li key={j} style={{ position: 'relative', paddingLeft: '14px', marginBottom: '4px', lineHeight: '1.6' }}>
+                <span style={{ position: 'absolute', left: 0, color: '#6bb8d4' }}>›</span>
+                {renderInline(item)}
+              </li>
+            ))}
+          </ul>
+        )
+        continue
+      } else if (/^\d+\.\s/.test(line.trim())) {
+        const items = []
+        let num = 1
+        while (i < lines.length && /^\d+\.\s/.test(lines[i].trim())) {
+          items.push(lines[i].trim().replace(/^\d+\.\s/, ''))
+          i++
+        }
+        result.push(
+          <ol key={i} style={{ paddingLeft: '16px', margin: '6px 0', listStyle: 'none' }}>
+            {items.map((item, j) => (
+              <li key={j} style={{ position: 'relative', paddingLeft: '20px', marginBottom: '4px', lineHeight: '1.6' }}>
+                <span style={{ position: 'absolute', left: 0, color: '#6bb8d4', fontSize: '11px' }}>{j + 1}.</span>
+                {renderInline(item)}
+              </li>
+            ))}
+          </ol>
+        )
+        continue
+      } else {
+        result.push(<div key={i} style={{ lineHeight: '1.7', marginBottom: '2px' }}>{renderInline(line)}</div>)
+      }
+      i++
+    }
+    return result
+  }
+
   return (
-    <div>
-      {parts.map((part, i) =>
-        part.type === 'code'
-          ? <CodeBlock key={i} code={part.content} language={part.language} />
-          : <span key={i} style={{ whiteSpace: 'pre-wrap' }}>{part.content}</span>
+    <div style={{ fontSize: '13px', color: '#e8edf2' }}>
+      {segments.map((seg, i) =>
+        seg.type === 'code'
+          ? <CodeBlock key={i} code={seg.content} language={seg.language} />
+          : <div key={i}>{renderText(seg.content)}</div>
       )}
     </div>
   )
@@ -128,7 +202,8 @@ export default function ChatPage() {
           --text-dim: rgba(232,237,242,0.5);
           --text-faint: rgba(232,237,242,0.2);
         }
-        .chat-layout { min-height: 100vh; background: var(--bg); color: var(--text); font-family: 'Share Tech Mono', monospace; display: flex; }
+        html, body { height: 100%; overflow: hidden; }
+        .chat-layout { height: 100vh; background: var(--bg); color: var(--text); font-family: 'Share Tech Mono', monospace; display: flex; overflow: hidden; }
         .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(6,8,16,0.7); z-index: 99; backdrop-filter: blur(2px); }
         .sidebar-overlay.open { display: block; }
         .sidebar { width: 260px; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 24px 16px; flex-shrink: 0; }
@@ -143,14 +218,14 @@ export default function ChatPage() {
         .history-item { background: transparent; color: var(--text-dim); border: 1px solid transparent; padding: 9px 12px; cursor: pointer; text-align: left; font-size: 12px; font-family: 'Share Tech Mono', monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: all .2s; border-radius: 2px; }
         .history-item:hover { color: var(--text); border-color: var(--border); background: rgba(255,255,255,0.03); }
         .history-item.active { color: var(--accent); border-color: var(--border-bright); background: var(--accent-glow); }
-        .chat-main { flex: 1; display: flex; flex-direction: column; min-height: 0; }
-        .chat-topbar { height: 56px; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 24px; gap: 12px; flex-shrink: 0; position: sticky; top: 0; z-index: 50; background: var(--bg); }
+        .chat-main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+        .chat-topbar { height: 56px; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 24px; gap: 12px; flex-shrink: 0; background: var(--bg); z-index: 10; }
         .hamburger-btn { display: none; background: transparent; border: none; cursor: pointer; padding: 4px; flex-direction: column; gap: 5px; flex-shrink: 0; }
         .hamburger-btn span { display: block; width: 20px; height: 2px; background: var(--accent); }
         .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: blink 2s ease-in-out infinite; flex-shrink: 0; }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
         .topbar-text { font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--text-faint); }
-        .messages-area { flex: 1; overflow-y: auto; padding: 32px 24px; display: flex; flex-direction: column; gap: 24px; }
+        .messages-area { flex: 1; overflow-y: auto; padding: 32px 24px; display: flex; flex-direction: column; gap: 20px; }
         .messages-area::-webkit-scrollbar { width: 3px; }
         .messages-area::-webkit-scrollbar-thumb { background: var(--border); }
         .empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; opacity: 0.4; }
@@ -161,16 +236,16 @@ export default function ChatPage() {
         .msg-row.user { align-items: flex-end; }
         .msg-row.assistant { align-items: flex-start; }
         .msg-label { font-size: 9px; letter-spacing: .15em; text-transform: uppercase; color: var(--text-faint); padding: 0 4px; }
-        .msg-bubble { padding: 14px 18px; max-width: 75%; font-size: 13px; line-height: 1.75; }
-        .msg-bubble.user { background: var(--accent); color: #060810; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); white-space: pre-wrap; }
-        .msg-bubble.assistant { background: var(--bg3); color: var(--text); border: 1px solid var(--border); clip-path: polygon(8px 0, 100% 0, 100% 100%, 0 100%, 0 8px); max-width: 90%; }
+        .msg-bubble { padding: 14px 18px; max-width: 80%; font-size: 13px; line-height: 1.75; word-break: break-word; }
+        .msg-bubble.user { background: var(--accent); color: #060810; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); white-space: pre-wrap; max-width: 70%; }
+        .msg-bubble.assistant { background: var(--bg3); color: var(--text); border: 1px solid var(--border); clip-path: polygon(8px 0, 100% 0, 100% 100%, 0 100%, 0 8px); max-width: 88%; }
         .typing-indicator { display: flex; align-items: center; gap: 10px; color: var(--accent); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; padding: 0 4px; }
         .typing-dots { display: flex; gap: 4px; }
         .typing-dots span { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); animation: dotPulse 1.2s ease-in-out infinite; }
         .typing-dots span:nth-child(2) { animation-delay: .2s; }
         .typing-dots span:nth-child(3) { animation-delay: .4s; }
         @keyframes dotPulse { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
-        .input-area { padding: 20px 24px; border-top: 1px solid var(--border); display: flex; gap: 12px; align-items: flex-end; flex-shrink: 0; background: var(--bg); }
+        .input-area { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; gap: 12px; align-items: flex-end; flex-shrink: 0; background: var(--bg); }
         .input-wrapper { flex: 1; border: 1px solid var(--border); background: var(--bg2); clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px)); transition: border-color .2s; }
         .input-wrapper:focus-within { border-color: var(--border-bright); }
         .input-wrapper.disabled { opacity: .4; pointer-events: none; }
@@ -193,6 +268,9 @@ export default function ChatPage() {
           .sidebar.open { transform: translateX(0); }
           .hamburger-btn { display: flex; }
           .msg-bubble.assistant { max-width: 100%; }
+          .msg-bubble.user { max-width: 85%; }
+          .messages-area { padding: 20px 16px; }
+          .input-area { padding: 12px 16px; }
         }
       `}</style>
 
