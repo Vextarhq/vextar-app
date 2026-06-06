@@ -214,18 +214,28 @@ export default function ChatPage() {
         }
         .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(6,8,16,0.7); z-index: 99; backdrop-filter: blur(2px); }
         .sidebar-overlay.open { display: block; }
-        .sidebar { width: 260px; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 24px 16px; flex-shrink: 0; }
+        .sidebar {
+          width: 260px;
+          background: var(--bg2);
+          border-right: 1px solid var(--border);
+          display: flex;
+          flex-direction: column;
+          flex-shrink: 0;
+          overflow: hidden;
+        }
+        .sidebar-top { padding: 24px 16px 0; flex-shrink: 0; }
         .sidebar-logo { font-family: 'Rajdhani', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--text); margin-bottom: 24px; padding: 0 8px; }
         .sidebar-logo span { color: var(--accent); }
-        .new-chat-btn { background: transparent; color: var(--accent); border: 1px solid var(--border-bright); padding: 10px 16px; font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; margin-bottom: 24px; transition: background .2s, box-shadow .2s; clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px)); text-align: left; }
+        .new-chat-btn { background: transparent; color: var(--accent); border: 1px solid var(--border-bright); padding: 10px 16px; font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; margin-bottom: 24px; transition: background .2s, box-shadow .2s; clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px)); text-align: left; width: 100%; }
         .new-chat-btn:hover { background: var(--accent-glow); box-shadow: 0 0 16px var(--accent-glow); }
         .sidebar-label { font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 10px; padding: 0 8px; }
-        .history-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; padding-bottom: 8px; }
+        .history-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; padding: 0 16px; min-height: 0; }
         .history-list::-webkit-scrollbar { width: 3px; }
         .history-list::-webkit-scrollbar-thumb { background: var(--border); }
-        .history-item { background: transparent; color: var(--text-dim); border: 1px solid transparent; padding: 9px 12px; cursor: pointer; text-align: left; font-size: 12px; font-family: 'Share Tech Mono', monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: all .2s; border-radius: 2px; width: 100%; }
+        .history-item { background: transparent; color: var(--text-dim); border: 1px solid transparent; padding: 9px 12px; cursor: pointer; text-align: left; font-size: 12px; font-family: 'Share Tech Mono', monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: all .2s; border-radius: 2px; width: 100%; flex-shrink: 0; }
         .history-item:hover { color: var(--text); border-color: var(--border); background: rgba(255,255,255,0.03); }
         .history-item.active { color: var(--accent); border-color: var(--border-bright); background: var(--accent-glow); }
+        .sidebar-bottom { padding: 16px; flex-shrink: 0; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
         .chat-main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
         .chat-topbar { height: 56px; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 24px; gap: 12px; flex-shrink: 0; background: var(--bg); z-index: 10; }
         .hamburger-btn { display: flex; background: transparent; border: none; cursor: pointer; padding: 4px; flex-direction: column; gap: 5px; flex-shrink: 0; }
@@ -298,9 +308,11 @@ export default function ChatPage() {
 
       <div className="chat-layout">
         <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
-          <div className="sidebar-logo"><span>V</span>EXTAR</div>
-          <button className="new-chat-btn" onClick={newChat}>+ New chat</button>
-          <div className="sidebar-label">Conversations</div>
+          <div className="sidebar-top">
+            <div className="sidebar-logo"><span>V</span>EXTAR</div>
+            <button className="new-chat-btn" onClick={newChat}>+ New chat</button>
+            <div className="sidebar-label">Conversations</div>
+          </div>
           <div className="history-list">
             {history.map(conv => (
               <button
@@ -312,12 +324,14 @@ export default function ChatPage() {
               </button>
             ))}
           </div>
-          <button onClick={() => window.location.href = '/pricing'} className="new-chat-btn" style={{ background: 'rgba(107,184,212,0.15)', borderColor: 'rgba(107,184,212,0.6)' }}>
-            ⚡ Upgrade to Pro
-          </button>
-          <button onClick={() => signOut({ redirectUrl: '/landing' })} className="new-chat-btn" style={{ marginTop: '12px' }}>
-            Sign Out
-          </button>
+          <div className="sidebar-bottom">
+            <button onClick={() => window.location.href = '/pricing'} className="new-chat-btn" style={{ background: 'rgba(107,184,212,0.15)', borderColor: 'rgba(107,184,212,0.6)', marginBottom: 0 }}>
+              ⚡ Upgrade to Pro
+            </button>
+            <button onClick={() => signOut({ redirectUrl: '/landing' })} className="new-chat-btn" style={{ marginBottom: 0 }}>
+              Sign Out
+            </button>
+          </div>
         </aside>
 
         <main className="chat-main">
