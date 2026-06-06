@@ -3,6 +3,54 @@ import { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@clerk/nextjs'
 import { useClerk } from '@clerk/nextjs'
 
+function CodeBlock({ code, language }) {
+  const [copied, setCopied] = useState(false)
+  function handleCopy() {
+    navigator.clipboard.writeText(code)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+  return (
+    <div style={{ position: 'relative', margin: '12px 0', background: '#060810', border: '1px solid rgba(107,184,212,0.25)', borderRadius: '4px', overflow: 'hidden' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 16px', background: 'rgba(107,184,212,0.08)', borderBottom: '1px solid rgba(107,184,212,0.15)' }}>
+        <span style={{ fontSize: '10px', letterSpacing: '.15em', textTransform: 'uppercase', color: 'rgba(107,184,212,0.6)', fontFamily: "'Share Tech Mono', monospace" }}>{language || 'code'}</span>
+        <button onClick={handleCopy} style={{ background: copied ? 'rgba(107,184,212,0.3)' : 'transparent', color: copied ? '#6bb8d4' : 'rgba(232,237,242,0.4)', border: '1px solid', borderColor: copied ? 'rgba(107,184,212,0.6)' : 'rgba(255,255,255,0.1)', padding: '4px 12px', fontFamily: "'Share Tech Mono', monospace", fontSize: '10px', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .2s' }}>
+          {copied ? '✓ Copied' : 'Copy'}
+        </button>
+      </div>
+      <pre style={{ margin: 0, padding: '16px', overflowX: 'auto', fontSize: '12px', lineHeight: '1.7', color: '#e8edf2', fontFamily: "'Share Tech Mono', monospace", whiteSpace: 'pre' }}>
+        <code>{code}</code>
+      </pre>
+    </div>
+  )
+}
+
+function MessageContent({ content }) {
+  const parts = []
+  const regex = /```(\w*)\n?([\s\S]*?)```/g
+  let lastIndex = 0
+  let match
+  while ((match = regex.exec(content)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push({ type: 'text', content: content.slice(lastIndex, match.index) })
+    }
+    parts.push({ type: 'code', language: match[1], content: match[2] })
+    lastIndex = match.index + match[0].length
+  }
+  if (lastIndex < content.length) {
+    parts.push({ type: 'text', content: content.slice(lastIndex) })
+  }
+  return (
+    <div>
+      {parts.map((part, i) =>
+        part.type === 'code'
+          ? <CodeBlock key={i} code={part.content} language={part.language} />
+          : <span key={i} style={{ whiteSpace: 'pre-wrap' }}>{part.content}</span>
+      )}
+    </div>
+  )
+}
+
 export default function ChatPage() {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
@@ -113,9 +161,9 @@ export default function ChatPage() {
         .msg-row.user { align-items: flex-end; }
         .msg-row.assistant { align-items: flex-start; }
         .msg-label { font-size: 9px; letter-spacing: .15em; text-transform: uppercase; color: var(--text-faint); padding: 0 4px; }
-        .msg-bubble { padding: 14px 18px; max-width: 75%; white-space: pre-wrap; font-size: 13px; line-height: 1.75; }
-        .msg-bubble.user { background: var(--accent); color: #060810; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); }
-        .msg-bubble.assistant { background: var(--bg3); color: var(--text); border: 1px solid var(--border); clip-path: polygon(8px 0, 100% 0, 100% 100%, 0 100%, 0 8px); }
+        .msg-bubble { padding: 14px 18px; max-width: 75%; font-size: 13px; line-height: 1.75; }
+        .msg-bubble.user { background: var(--accent); color: #060810; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); white-space: pre-wrap; }
+        .msg-bubble.assistant { background: var(--bg3); color: var(--text); border: 1px solid var(--border); clip-path: polygon(8px 0, 100% 0, 100% 100%, 0 100%, 0 8px); max-width: 90%; }
         .typing-indicator { display: flex; align-items: center; gap: 10px; color: var(--accent); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; padding: 0 4px; }
         .typing-dots { display: flex; gap: 4px; }
         .typing-dots span { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); animation: dotPulse 1.2s ease-in-out infinite; }
@@ -144,6 +192,7 @@ export default function ChatPage() {
           .sidebar { position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; transform: translateX(-100%); transition: transform .3s ease; }
           .sidebar.open { transform: translateX(0); }
           .hamburger-btn { display: flex; }
+          .msg-bubble.assistant { max-width: 100%; }
         }
       `}</style>
 
@@ -179,11 +228,11 @@ export default function ChatPage() {
             ))}
           </div>
           <button onClick={() => window.location.href = '/pricing'} className="new-chat-btn" style={{ background: 'rgba(107,184,212,0.15)', borderColor: 'rgba(107,184,212,0.6)' }}>
-  ⚡ Upgrade to Pro
-</button>
-<button onClick={() => signOut({ redirectUrl: '/landing' })} className="new-chat-btn" style={{ marginTop: '12px' }}>
-  Sign Out
-</button>
+            ⚡ Upgrade to Pro
+          </button>
+          <button onClick={() => signOut({ redirectUrl: '/landing' })} className="new-chat-btn" style={{ marginTop: '12px' }}>
+            Sign Out
+          </button>
         </aside>
 
         <main className="chat-main">
@@ -205,7 +254,12 @@ export default function ChatPage() {
             {messages.map((m, i) => (
               <div key={i} className={`msg-row ${m.role}`}>
                 <span className="msg-label">{m.role === 'user' ? 'You' : 'Vextar'}</span>
-                <div className={`msg-bubble ${m.role}`}>{m.content}</div>
+                <div className={`msg-bubble ${m.role}`}>
+                  {m.role === 'assistant'
+                    ? <MessageContent content={m.content} />
+                    : m.content
+                  }
+                </div>
               </div>
             ))}
             {loading && (
