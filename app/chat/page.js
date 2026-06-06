@@ -95,7 +95,7 @@ export default function ChatPage() {
         .history-item { background: transparent; color: var(--text-dim); border: 1px solid transparent; padding: 9px 12px; cursor: pointer; text-align: left; font-size: 12px; font-family: 'Share Tech Mono', monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: all .2s; border-radius: 2px; }
         .history-item:hover { color: var(--text); border-color: var(--border); background: rgba(255,255,255,0.03); }
         .history-item.active { color: var(--accent); border-color: var(--border-bright); background: var(--accent-glow); }
-        .chat-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .chat-main { flex: 1; display: flex; flex-direction: column; min-height: 0; }
         .chat-topbar { height: 56px; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 24px; gap: 12px; flex-shrink: 0; position: sticky; top: 0; z-index: 50; background: var(--bg); }
         .hamburger-btn { display: none; background: transparent; border: none; cursor: pointer; padding: 4px; flex-direction: column; gap: 5px; flex-shrink: 0; }
         .hamburger-btn span { display: block; width: 20px; height: 2px; background: var(--accent); }
