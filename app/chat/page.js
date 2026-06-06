@@ -90,7 +90,6 @@ function MessageContent({ content }) {
         continue
       } else if (/^\d+\.\s/.test(line.trim())) {
         const items = []
-        let num = 1
         while (i < lines.length && /^\d+\.\s/.test(lines[i].trim())) {
           items.push(lines[i].trim().replace(/^\d+\.\s/, ''))
           i++
@@ -203,7 +202,16 @@ export default function ChatPage() {
           --text-faint: rgba(232,237,242,0.2);
         }
         html, body { height: 100%; overflow: hidden; }
-        .chat-layout { height: 100vh; background: var(--bg); color: var(--text); font-family: 'Share Tech Mono', monospace; display: flex; overflow: hidden; }
+        .chat-layout {
+          height: 100dvh;
+          background: var(--bg);
+          color: var(--text);
+          font-family: 'Share Tech Mono', monospace;
+          display: flex;
+          overflow: hidden;
+          padding-top: env(safe-area-inset-top);
+          padding-bottom: env(safe-area-inset-bottom);
+        }
         .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(6,8,16,0.7); z-index: 99; backdrop-filter: blur(2px); }
         .sidebar-overlay.open { display: block; }
         .sidebar { width: 260px; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 24px 16px; flex-shrink: 0; }
@@ -219,8 +227,8 @@ export default function ChatPage() {
         .history-item:hover { color: var(--text); border-color: var(--border); background: rgba(255,255,255,0.03); }
         .history-item.active { color: var(--accent); border-color: var(--border-bright); background: var(--accent-glow); }
         .chat-main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
-        .chat-topbar { height: 56px; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: env(safe-area-inset-top, 0px) 24px 0; min-height: calc(56px + env(safe-area-inset-top, 0px)); gap: 12px; flex-shrink: 0; background: var(--bg); z-index: 10; }
-        .hamburger-btn { display: none; background: transparent; border: none; cursor: pointer; padding: 4px; flex-direction: column; gap: 5px; flex-shrink: 0; }
+        .chat-topbar { height: 56px; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 24px; gap: 12px; flex-shrink: 0; background: var(--bg); z-index: 10; }
+        .hamburger-btn { display: flex; background: transparent; border: none; cursor: pointer; padding: 4px; flex-direction: column; gap: 5px; flex-shrink: 0; }
         .hamburger-btn span { display: block; width: 20px; height: 2px; background: var(--accent); }
         .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: blink 2s ease-in-out infinite; flex-shrink: 0; }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
@@ -266,7 +274,6 @@ export default function ChatPage() {
         @media(max-width: 700px) {
           .sidebar { position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; transform: translateX(-100%); transition: transform .3s ease; }
           .sidebar.open { transform: translateX(0); }
-          .hamburger-btn { display: flex; }
           .msg-bubble.assistant { max-width: 100%; }
           .msg-bubble.user { max-width: 85%; }
           .messages-area { padding: 20px 16px; }
