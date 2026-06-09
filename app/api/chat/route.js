@@ -16,7 +16,6 @@ export async function POST(req) {
   )
 
   if (userId) {
-    // Verificar si usuario es Pro
     const { data: subscription } = await supabase
       .from('subscriptions')
       .select('status, plan')
@@ -25,7 +24,6 @@ export async function POST(req) {
 
     const isPro = subscription?.status === 'active' && subscription?.plan === 'pro'
 
-    // Solo aplicar límite si NO es pro
     if (!isPro) {
       const month = new Date().toISOString().slice(0, 7)
       const { data: countRow } = await supabase
@@ -43,17 +41,20 @@ export async function POST(req) {
   }
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://api.deepseek.com/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
+        'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-5-20250929',
-        max_tokens: 16000,
-        system: `You are Vextar, an elite AI-powered coding assistant built for professional developers and entrepreneurs. You combine deep technical expertise with real-world practicality.
+        model: 'deepseek-chat',
+        max_tokens: 8192,
+        temperature: 0.3,
+        messages: [
+          {
+            role: 'system',
+            content: `You are Vextar, an elite AI-powered coding assistant built for professional developers and entrepreneurs. You combine deep technical expertise with real-world practicality.
 
 CORE BEHAVIOR:
 - Always respond in the same language the user writes in
@@ -89,8 +90,10 @@ SPECIALTIES:
 PERSONALITY:
 - Professional but approachable
 - Confident, never uncertain
-- Solutions-focused, not excuse-focused.`,
-        messages: messages
+- Solutions-focused, not excuse-focused`
+          },
+          ...messages
+        ]
       })
     })
 
@@ -100,7 +103,7 @@ PERSONALITY:
     }
 
     const data = await response.json()
-    const reply = data.content[0].text
+    const reply = data.choices[0].message.content
     const allMessages = [...messages, { role: 'assistant', content: reply }]
 
     if (userId) {
