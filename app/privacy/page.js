@@ -40,7 +40,8 @@ export default function Privacy() {
 
       <section style={{marginBottom: '40px'}}>
         <h2 style={{color: '#00bcd4', fontSize: '13px', letterSpacing: '3px'}}>4. AI PROCESSING & YOUR CONVERSATIONS</h2>
-        <p style={{lineHeight: '1.8', color: '#aaa'}}>Vextar uses DeepSeek, an AI model developed by Anthropic, to process your coding requests. When you send a message, your prompt is transmitted to Anthropic's API to generate a response. Anthropic's own privacy policy and data handling practices apply to this processing. We recommend reviewing Anthropic's privacy policy at <a href="https://www.anthropic.com/privacy" style={{color: '#00bcd4'}}>anthropic.com/privacy</a>.</p>
+        <p style={{lineHeight: '1.8', color: '#aaa'}}>>Vextar uses DeepSeek, an AI model developed by DeepSeek AI, to process your coding requests. When you send a message, your prompt is transmitted to DeepSeek's API to generate a response. DeepSeek's own privacy policy and data handling practices apply to this processing. We recommend reviewing DeepSeek's privacy policy at <a href="https://www.deepseek.com/privacy" style={{color: '#00bcd4'}}>deepseek.com/privacy</a>.
+
         <p style={{lineHeight: '1.8', color: '#aaa', marginTop: '16px'}}>Your conversation history is stored in our secure database (Supabase) and is accessible only to you through your account. We do not use your conversations to train AI models.</p>
       </section>
 
