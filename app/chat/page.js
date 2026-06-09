@@ -296,7 +296,7 @@ export default function ChatPage() {
           <div className="modal">
             <div className="modal-icon">⚡</div>
             <div className="modal-title">Limit <span>reached</span></div>
-            <p className="modal-desc">You've used your 40 free messages this month</p>
+            <p className="modal-desc">You've used your 15 free messages this week</p>
             <button className="modal-btn" onClick={() => window.location.href = '/pricing'}>
               View Pro plans →
             </button>
