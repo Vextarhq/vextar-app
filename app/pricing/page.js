@@ -54,12 +54,12 @@ export default function PricingPage() {
         <div className="plans">
           <div className="plan">
             <p className="plan-name">Monthly</p>
-            <div className="plan-price">$12<span>/mo</span></div>
+            <div className="plan-price">$18<span>/mo</span></div>
             <p className="plan-period">Billed monthly</p>
             <p className="plan-save"> </p>
             <ul className="plan-features">
-              <li>Unlimited AI messages</li>
-              <li>Claude-powered responses</li>
+              <li>80 messages per week</li>
+              <li>DeepSeek-powered responses</li>
               <li>Full conversation history</li>
               <li>Priority support</li>
             </ul>
@@ -70,12 +70,12 @@ export default function PricingPage() {
 
           <div className="plan featured">
             <p className="plan-name">Annual</p>
-            <div className="plan-price">$8<span>/mo</span></div>
-            <p className="plan-period">Billed $96/year</p>
+            <div className="plan-price">$12<span>/mo</span></div>
+            <p className="plan-period">Billed $144/year</p>
             <p className="plan-save">Save 33% vs monthly</p>
             <ul className="plan-features">
-              <li>Unlimited AI messages</li>
-              <li>Claude-powered responses</li>
+              <li>80 messages per week</li>
+              <li>DeepSeek-powered responses</li>
               <li>Full conversation history</li>
               <li>Priority support</li>
             </ul>
