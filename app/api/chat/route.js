@@ -1,6 +1,19 @@
 import { createClient } from '@supabase/supabase-js'
 
-const FREE_LIMIT = 40
+const FREE_LIMIT = 15
+
+function getWeekKey() {
+  const now = new Date()
+  const day = now.getUTCDay() // 0=Sunday, 1=Monday...
+  const diff = (day === 0 ? -6 : 1 - day) // days to go back to Monday
+  const monday = new Date(now)
+  monday.setUTCDate(now.getUTCDate() + diff)
+  monday.setUTCHours(0, 0, 0, 0)
+  const yyyy = monday.getUTCFullYear()
+  const mm = String(monday.getUTCMonth() + 1).padStart(2, '0')
+  const dd = String(monday.getUTCDate()).padStart(2, '0')
+  return `${yyyy}-W${mm}-${dd}`
+}
 
 export async function POST(req) {
   const { messages, sessionId, title, userId } = await req.json()
@@ -25,12 +38,12 @@ export async function POST(req) {
     const isPro = subscription?.status === 'active' && subscription?.plan === 'pro'
 
     if (!isPro) {
-      const month = new Date().toISOString().slice(0, 7)
+      const week = getWeekKey()
       const { data: countRow } = await supabase
         .from('message_counts')
         .select('count')
         .eq('user_id', userId)
-        .eq('month', month)
+        .eq('week', week)
         .single()
 
       const currentCount = countRow?.count || 0
@@ -107,12 +120,25 @@ PERSONALITY:
     const allMessages = [...messages, { role: 'assistant', content: reply }]
 
     if (userId) {
-      const month = new Date().toISOString().slice(0, 7)
+      const week = getWeekKey()
 
-      await supabase.rpc('increment_message_count', {
-        p_user_id: userId,
-        p_month: month
-      })
+      const { data: existingRow } = await supabase
+        .from('message_counts')
+        .select('id, count')
+        .eq('user_id', userId)
+        .eq('week', week)
+        .single()
+
+      if (existingRow) {
+        await supabase
+          .from('message_counts')
+          .update({ count: existingRow.count + 1 })
+          .eq('id', existingRow.id)
+      } else {
+        await supabase
+          .from('message_counts')
+          .insert({ user_id: userId, week: week, count: 1, month: new Date().toISOString().slice(0, 7) })
+      }
 
       const sessionTitle = title || messages[0]?.content?.slice(0, 50) || 'New chat'
 
