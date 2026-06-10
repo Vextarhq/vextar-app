@@ -133,6 +133,8 @@ export default function ChatPage() {
   const [limitReached, setLimitReached] = useState(false)
   const [limitType, setLimitType] = useState('free')
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [hasSubscription, setHasSubscription] = useState(false)
+  const [managingSubscription, setManagingSubscription] = useState(false)
   const bottomRef = useRef(null)
   const { userId } = useAuth()
   const { user } = useUser()
@@ -143,8 +145,33 @@ export default function ChatPage() {
   }, [sessionId])
 
   useEffect(() => {
+    // Verificar si el usuario tiene suscripción activa
+    fetch('/api/manage-subscription')
+      .then(r => {
+        if (r.ok) setHasSubscription(true)
+        else setHasSubscription(false)
+      })
+      .catch(() => setHasSubscription(false))
+  }, [userId])
+
+  useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, loading])
+
+  async function handleManageSubscription() {
+    setManagingSubscription(true)
+    try {
+      const res = await fetch('/api/manage-subscription')
+      const data = await res.json()
+      if (data.url) {
+        window.open(data.url, '_blank')
+      }
+    } catch (e) {
+      console.error('Error opening portal', e)
+    } finally {
+      setManagingSubscription(false)
+    }
+  }
 
   async function sendMessage() {
     if (!input.trim() || loading || limitReached || !userId) return
@@ -286,6 +313,9 @@ export default function ChatPage() {
         .modal-desc { font-size: 12px; color: var(--text-dim); line-height: 1.8; margin-bottom: 32px; }
         .modal-btn { background: var(--accent); color: #060810; border: none; padding: 14px 32px; font-family: 'Share Tech Mono', monospace; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; transition: opacity .2s, box-shadow .2s; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px)); }
         .modal-btn:hover { opacity: .85; box-shadow: 0 0 24px var(--accent-glow); }
+        .manage-btn { background: transparent; color: var(--text-dim); border: 1px solid var(--border); padding: 10px 16px; font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; transition: background .2s, color .2s, border-color .2s; clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px)); text-align: left; width: 100%; }
+        .manage-btn:hover { color: var(--text); border-color: var(--border-bright); background: rgba(255,255,255,0.03); }
+        .manage-btn:disabled { opacity: .4; cursor: not-allowed; }
         @media(max-width: 700px) {
           .sidebar { position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; transform: translateX(-100%); transition: transform .3s ease; }
           .sidebar.open { transform: translateX(0); }
@@ -334,6 +364,15 @@ export default function ChatPage() {
             ))}
           </div>
           <div className="sidebar-bottom">
+            {hasSubscription && (
+              <button
+                className="manage-btn"
+                onClick={handleManageSubscription}
+                disabled={managingSubscription}
+              >
+                {managingSubscription ? '⏳ Loading...' : '⚙ Manage Subscription'}
+              </button>
+            )}
             <button onClick={() => window.location.href = '/pricing'} className="new-chat-btn" style={{ background: 'rgba(107,184,212,0.15)', borderColor: 'rgba(107,184,212,0.6)', marginBottom: 0 }}>
               ⚡ Upgrade to Pro
             </button>
