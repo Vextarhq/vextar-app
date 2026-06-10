@@ -131,6 +131,7 @@ export default function ChatPage() {
   const [sessionId, setSessionId] = useState(null)
   const [history, setHistory] = useState([])
   const [limitReached, setLimitReached] = useState(false)
+  const [limitType, setLimitType] = useState('free')
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const bottomRef = useRef(null)
   const { userId } = useAuth()
@@ -162,6 +163,7 @@ export default function ChatPage() {
       const data = await res.json()
       if (data.error === 'limit_reached') {
         setLimitReached(true)
+        setLimitType(data.plan || 'free')
         setMessages(prev => prev.slice(0, -1))
         setLoading(false)
         return
@@ -296,9 +298,13 @@ export default function ChatPage() {
           <div className="modal">
             <div className="modal-icon">⚡</div>
             <div className="modal-title">Limit <span>reached</span></div>
-            <p className="modal-desc">You've used your free messages this week. Upgrade to Pro for 45 messages/week or ULTRA for unlimited access</p>
+            {limitType === 'pro' ? (
+              <p className="modal-desc">You've used your 45 Pro messages this week. Upgrade to Ultra for unlimited access.</p>
+            ) : (
+              <p className="modal-desc">You've used your 15 free messages this week. Upgrade to Pro for 45 messages/week or Ultra for unlimited access.</p>
+            )}
             <button className="modal-btn" onClick={() => window.location.href = '/pricing'}>
-              View Pro plans →
+              View plans →
             </button>
           </div>
         </div>
