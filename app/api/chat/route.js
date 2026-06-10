@@ -17,7 +17,7 @@ function getWeekKey() {
 }
 
 export async function POST(req) {
-  const { messages, sessionId, title, userId } = await req.json()
+  const { messages, sessionId, title, userId, userEmail } = await req.json()
   console.log('userId recibido:', userId, 'tipo:', typeof userId)
 
   if (!messages || !Array.isArray(messages)) {
@@ -39,7 +39,6 @@ export async function POST(req) {
     const isPro = subscription?.status === 'active' && subscription?.plan === 'pro'
     const isUltra = subscription?.status === 'active' && subscription?.plan === 'ultra'
 
-    // Ultra = mensajes ilimitados, no hay limite
     if (!isUltra) {
       const week = getWeekKey()
       const { data: countRow } = await supabase
@@ -156,6 +155,7 @@ PERSONALITY:
       } else {
         const { data: created } = await supabase.from('conversations').insert({
           user_id: userId,
+          email: userEmail || null,
           title: sessionTitle,
           messages: allMessages
         }).select()
