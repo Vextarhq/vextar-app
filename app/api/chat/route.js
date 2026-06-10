@@ -53,7 +53,7 @@ export async function POST(req) {
       const limit = isPro ? PRO_LIMIT : FREE_LIMIT
 
       if (currentCount >= limit) {
-        return Response.json({ error: 'limit_reached', count: currentCount }, { status: 403 })
+        return Response.json({ error: 'limit_reached', count: currentCount, plan: isPro ? 'pro' : 'free' }, { status: 403 })
       }
     }
   }
