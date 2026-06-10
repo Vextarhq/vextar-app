@@ -81,12 +81,12 @@ export default function Landing() {
   }, [])
 
   const goToLogin = () => router.push('/login')
+  const goToPricing = () => router.push('/pricing')
 
   return (
     <>
       <style>{`
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        
 
         :root {
           --bg: #060810;
@@ -316,6 +316,16 @@ export default function Landing() {
           background: linear-gradient(90deg, var(--accent), transparent);
         }
 
+        .powered-bar {
+          display: flex; align-items: center; justify-content: center;
+          gap: 16px; padding: 18px 56px;
+          border-bottom: 1px solid var(--border);
+          background: rgba(107,184,212,0.03);
+        }
+        .powered-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+        .powered-text { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--text-dim); }
+        .powered-text span { color: var(--accent); }
+
         .metrics {
           display: grid; grid-template-columns: repeat(4,1fr);
           border-bottom: 1px solid var(--border);
@@ -424,6 +434,18 @@ export default function Landing() {
         }
         .proc:last-child .proc-arrow { display: none; }
 
+        .view-plans-bar {
+          display: flex; align-items: center; justify-content: center;
+          gap: 24px; padding: 48px 56px;
+          background: var(--bg2);
+          border-bottom: 1px solid var(--border);
+        }
+        .view-plans-text {
+          font-family: 'Rajdhani', sans-serif;
+          font-size: 20px; font-weight: 600; letter-spacing: .08em;
+          text-transform: uppercase; color: var(--text-dim);
+        }
+
         .cta-section {
           padding: 120px 56px; text-align: center;
           position: relative; overflow: hidden;
@@ -450,23 +472,6 @@ export default function Landing() {
           margin-bottom: 40px; position: relative;
         }
         .cta-sub { font-size: 13px; color: var(--text-dim); max-width: 360px; margin: 0 auto 48px; line-height: 1.8; position: relative; }
-        .cta-form {
-          display: flex; max-width: 440px; margin: 0 auto;
-          border: 1px solid var(--border-bright); position: relative;
-          clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
-        }
-        .cta-form input {
-          flex: 1; padding: 14px 18px;
-          font-family: 'Share Tech Mono', monospace; font-size: 12px; letter-spacing: .04em;
-          background: transparent; border: none; outline: none; color: var(--text);
-        }
-        .cta-form input::placeholder { color: var(--text-faint); }
-        .cta-form button {
-          padding: 14px 22px; background: var(--accent); color: var(--bg);
-          font-family: 'Share Tech Mono', monospace; font-size: 12px; letter-spacing: .08em;
-          text-transform: uppercase; border: none; cursor: none; transition: opacity .2s;
-        }
-        .cta-form button:hover { opacity: .85; }
         .cta-hint { margin-top: 14px; font-size: 10px; letter-spacing: .08em; color: var(--text-faint); text-transform: uppercase; position: relative; }
 
         footer {
@@ -501,6 +506,8 @@ export default function Landing() {
           .metrics{grid-template-columns:1fr 1fr}
           .section,.cta-section{padding:64px 24px}
           footer{flex-direction:column;gap:16px;text-align:center;padding:28px 24px}
+          .view-plans-bar{flex-direction:column;padding:32px 24px;gap:16px}
+          .powered-bar{padding:18px 24px}
         }
         @media(max-width:580px){
           .features-grid,.process-grid,.metrics{grid-template-columns:1fr}
@@ -579,6 +586,13 @@ export default function Landing() {
 
       <div className="divider"></div>
 
+      {/* POWERED BY DEEPSEEK BAR */}
+      <div className="powered-bar reveal">
+        <span className="powered-dot"></span>
+        <span className="powered-text">Powered by <span>DeepSeek</span> — optimized for professional coding</span>
+        <span className="powered-dot"></span>
+      </div>
+
       <div className="metrics">
         <div className="metric reveal"><div className="metric-val" id="m1">—</div><div className="metric-label">Output accuracy</div></div>
         <div className="metric reveal"><div className="metric-val" id="m2">—</div><div className="metric-label">Avg. response time</div></div>
@@ -628,13 +642,19 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* VIEW PLANS BAR */}
+      <div className="view-plans-bar reveal">
+        <span className="view-plans-text">Ready to unlock full access?</span>
+        <button className="btn-primary" onClick={goToPricing}>View Plans →</button>
+      </div>
+
       <section className="cta-section" id="pricing">
         <div className="cta-title reveal">Start building</div>
         <div className="cta-title-ghost reveal">with Vextar.</div>
         <p className="cta-sub reveal">No credit card required. 15 free messages per week. Cancel anytime.</p>
-       <div className="reveal">
-  <button className="btn-primary" onClick={goToLogin}>Access Now →</button>
-</div>
+        <div className="reveal">
+          <button className="btn-primary" onClick={goToLogin}>Access Now →</button>
+        </div>
         <p className="cta-hint reveal">Trusted by 12,000+ developers worldwide</p>
       </section>
 
@@ -644,8 +664,8 @@ export default function Landing() {
         </div>
         <nav className="f-links">
           <a href="/privacy">Privacy</a>
-<a href="/terms">Terms</a>
-<a href="/refund">Refund</a>
+          <a href="/terms">Terms</a>
+          <a href="/refund">Refund</a>
         </nav>
         <span className="f-copy">© 2026 Vextar, Inc.</span>
       </footer>
