@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@clerk/nextjs'
-import { useClerk } from '@clerk/nextjs'
+import { useClerk, useUser } from '@clerk/nextjs'
 
 function CodeBlock({ code, language }) {
   const [copied, setCopied] = useState(false)
@@ -135,6 +135,7 @@ export default function ChatPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const bottomRef = useRef(null)
   const { userId } = useAuth()
+  const { user } = useUser()
   const { signOut } = useClerk()
 
   useEffect(() => {
@@ -153,10 +154,12 @@ export default function ChatPage() {
     setInput('')
     setLoading(true)
 
+    const userEmail = user?.primaryEmailAddress?.emailAddress || null
+
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: newMessages, sessionId, userId })
+      body: JSON.stringify({ messages: newMessages, sessionId, userId, userEmail })
     })
 
     if (res.status === 403) {
