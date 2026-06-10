@@ -1,11 +1,12 @@
 import { createClient } from '@supabase/supabase-js'
 
 const FREE_LIMIT = 15
+const PRO_LIMIT = 45
 
 function getWeekKey() {
   const now = new Date()
-  const day = now.getUTCDay() // 0=Sunday, 1=Monday...
-  const diff = (day === 0 ? -6 : 1 - day) // days to go back to Monday
+  const day = now.getUTCDay()
+  const diff = (day === 0 ? -6 : 1 - day)
   const monday = new Date(now)
   monday.setUTCDate(now.getUTCDate() + diff)
   monday.setUTCHours(0, 0, 0, 0)
@@ -36,8 +37,10 @@ export async function POST(req) {
       .single()
 
     const isPro = subscription?.status === 'active' && subscription?.plan === 'pro'
+    const isUltra = subscription?.status === 'active' && subscription?.plan === 'ultra'
 
-    if (!isPro) {
+    // Ultra = mensajes ilimitados, no hay limite
+    if (!isUltra) {
       const week = getWeekKey()
       const { data: countRow } = await supabase
         .from('message_counts')
@@ -47,7 +50,9 @@ export async function POST(req) {
         .single()
 
       const currentCount = countRow?.count || 0
-      if (currentCount >= FREE_LIMIT) {
+      const limit = isPro ? PRO_LIMIT : FREE_LIMIT
+
+      if (currentCount >= limit) {
         return Response.json({ error: 'limit_reached', count: currentCount }, { status: 403 })
       }
     }
