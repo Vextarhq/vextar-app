@@ -5,18 +5,47 @@ import { useClerk, useUser } from '@clerk/nextjs'
 
 function CodeBlock({ code, language }) {
   const [copied, setCopied] = useState(false)
+
   function handleCopy() {
     navigator.clipboard.writeText(code)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
+
+  function handleDownload() {
+    const extensions = {
+      python: 'py', javascript: 'js', typescript: 'ts',
+      jsx: 'jsx', tsx: 'tsx', css: 'css', html: 'html',
+      json: 'json', sql: 'sql', bash: 'sh', shell: 'sh',
+      rust: 'rs', go: 'go', java: 'java', cpp: 'cpp',
+      c: 'c', php: 'php', ruby: 'rb', swift: 'swift',
+      kotlin: 'kt', markdown: 'md', yaml: 'yml', csv: 'csv',
+      txt: 'txt', xml: 'xml', dockerfile: 'dockerfile'
+    }
+    const ext = extensions[language?.toLowerCase()] || 'txt'
+    const blob = new Blob([code], { type: 'text/plain' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `vextar_output.${ext}`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
   return (
     <div style={{ position: 'relative', margin: '12px 0', background: '#060810', border: '1px solid rgba(107,184,212,0.25)', borderRadius: '4px', overflow: 'hidden' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 16px', background: 'rgba(107,184,212,0.08)', borderBottom: '1px solid rgba(107,184,212,0.15)' }}>
         <span style={{ fontSize: '10px', letterSpacing: '.15em', textTransform: 'uppercase', color: 'rgba(107,184,212,0.6)', fontFamily: "'Share Tech Mono', monospace" }}>{language || 'code'}</span>
-        <button onClick={handleCopy} style={{ background: copied ? 'rgba(107,184,212,0.3)' : 'transparent', color: copied ? '#6bb8d4' : 'rgba(232,237,242,0.4)', border: '1px solid', borderColor: copied ? 'rgba(107,184,212,0.6)' : 'rgba(255,255,255,0.1)', padding: '4px 12px', fontFamily: "'Share Tech Mono', monospace", fontSize: '10px', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .2s', borderRadius: '2px' }}>
-          {copied ? '✓ Copied' : 'Copy'}
-        </button>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button onClick={handleDownload} style={{ background: 'transparent', color: 'rgba(232,237,242,0.4)', border: '1px solid rgba(255,255,255,0.1)', padding: '4px 12px', fontFamily: "'Share Tech Mono', monospace", fontSize: '10px', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .2s', borderRadius: '2px' }}
+            onMouseEnter={e => { e.target.style.color = '#6bb8d4'; e.target.style.borderColor = 'rgba(107,184,212,0.6)' }}
+            onMouseLeave={e => { e.target.style.color = 'rgba(232,237,242,0.4)'; e.target.style.borderColor = 'rgba(255,255,255,0.1)' }}>
+            ↓ Download
+          </button>
+          <button onClick={handleCopy} style={{ background: copied ? 'rgba(107,184,212,0.3)' : 'transparent', color: copied ? '#6bb8d4' : 'rgba(232,237,242,0.4)', border: '1px solid', borderColor: copied ? 'rgba(107,184,212,0.6)' : 'rgba(255,255,255,0.1)', padding: '4px 12px', fontFamily: "'Share Tech Mono', monospace", fontSize: '10px', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .2s', borderRadius: '2px' }}>
+            {copied ? '✓ Copied' : 'Copy'}
+          </button>
+        </div>
       </div>
       <pre style={{ margin: 0, padding: '16px', overflowX: 'auto', fontSize: '12px', lineHeight: '1.7', color: '#e8edf2', fontFamily: "'Share Tech Mono', monospace", whiteSpace: 'pre' }}>
         <code>{code}</code>
@@ -230,26 +259,14 @@ export default function ChatPage() {
         }
         html, body { height: 100%; overflow: hidden; }
         .chat-layout {
-          height: 100dvh;
-          background: var(--bg);
-          color: var(--text);
-          font-family: 'Share Tech Mono', monospace;
-          display: flex;
-          overflow: hidden;
-          padding-top: env(safe-area-inset-top);
+          height: 100dvh; background: var(--bg); color: var(--text);
+          font-family: 'Share Tech Mono', monospace; display: flex;
+          overflow: hidden; padding-top: env(safe-area-inset-top);
           padding-bottom: env(safe-area-inset-bottom);
         }
         .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(6,8,16,0.7); z-index: 99; backdrop-filter: blur(2px); }
         .sidebar-overlay.open { display: block; }
-        .sidebar {
-          width: 260px;
-          background: var(--bg2);
-          border-right: 1px solid var(--border);
-          display: flex;
-          flex-direction: column;
-          flex-shrink: 0;
-          overflow: hidden;
-        }
+        .sidebar { width: 260px; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; overflow: hidden; }
         .sidebar-top { padding: 24px 16px 0; flex-shrink: 0; }
         .sidebar-logo { font-family: 'Rajdhani', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--text); margin-bottom: 24px; padding: 0 8px; }
         .sidebar-logo span { color: var(--accent); }
@@ -359,11 +376,7 @@ export default function ChatPage() {
             ))}
           </div>
           <div className="sidebar-bottom">
-            <button
-              className="manage-btn"
-              onClick={handleManageSubscription}
-              disabled={managingSubscription}
-            >
+            <button className="manage-btn" onClick={handleManageSubscription} disabled={managingSubscription}>
               {managingSubscription ? '⏳ Loading...' : '⚙ Manage Subscription'}
             </button>
             <button onClick={() => signOut({ redirectUrl: '/landing' })} className="new-chat-btn" style={{ marginBottom: 0 }}>
