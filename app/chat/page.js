@@ -158,7 +158,7 @@ export default function ChatPage() {
       })
       const data = await res.json()
       if (data.url) {
-        window.open(data.url, '_blank')
+        window.location.href = data.url
       } else {
         window.location.href = '/pricing'
       }
