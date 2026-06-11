@@ -1,8 +1,8 @@
-import { auth } from '@clerk/nextjs/server'
 import { createClient } from '@supabase/supabase-js'
 
-export async function GET() {
-  const { userId } = await auth()
+export async function POST(request) {
+  const { userId } = await request.json()
+
   if (!userId) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 })
   }
@@ -14,7 +14,7 @@ export async function GET() {
 
   const { data: subscription, error } = await supabase
     .from('subscriptions')
-    .select('ls_subscription_id, status')
+    .select('ls_subscription_id')
     .eq('user_id', userId)
     .eq('status', 'active')
     .not('ls_subscription_id', 'is', null)
@@ -26,7 +26,6 @@ export async function GET() {
     return Response.json({ error: 'No subscription found' }, { status: 404 })
   }
 
-  // Obtener el portal URL via subscription ID
   const res = await fetch(
     `https://api.lemonsqueezy.com/v1/subscriptions/${subscription.ls_subscription_id}`,
     {
