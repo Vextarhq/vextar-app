@@ -54,7 +54,7 @@ export default function Landing() {
     { q:"What's the difference between Pro and Ultra?", a:"Pro gives you 45 messages per week — ideal for daily coding tasks. Ultra gives you unlimited messages with no weekly cap, perfect for intensive development or teams shipping fast." },
     { q:"How do I upgrade from Pro to Ultra?", a:"Go to the chat sidebar and click 'Manage Subscription'. From there, cancel your Pro plan and purchase an Ultra plan. Your Pro access continues until the end of your current billing period." },
     { q:"Can I cancel my subscription anytime?", a:"Yes, anytime. Click 'Manage Subscription' in the chat sidebar. You'll keep access until the end of your billing period — no immediate cutoff." },
-    { q:"Do you offer refunds?", a:"We offer refunds within 14 days of purchase if you're not satisfied. Contact us at vextarhq@gmail.com with your order details and we'll process it promptly." },
+    { q:"Do you offer refunds?", a:"We offer refunds within 7 days of purchase if you're not satisfied. Contact us at vextarhq@gmail.com with your order details and we'll process it promptly." },
     { q:"When do my weekly messages reset?", a:"Message counts reset every Monday at 00:00 UTC for all plans. Free users get 15 messages, Pro users get 45, Ultra users have no limit." },
     { q:"What happens when I reach my message limit?", a:"You'll see a notification and won't be able to send more messages until the Monday reset. You can upgrade at any time to get more messages immediately." },
     { q:"What AI model does Vextar use?", a:"Vextar is powered by DeepSeek V4 Pro — a state-of-the-art model optimized specifically for code generation, refactoring, and technical problem solving." },
@@ -224,7 +224,7 @@ export default function Landing() {
       <section className="hero">
         <div className="hero-orb"></div>
         <div className="hero-orb2"></div>
-        <div className="hero-status"><span className="status-dot"></span>System Online — v2.4.1</div>
+        <div className="hero-status"><span className="status-dot"></span>Powered by DeepSeek</div>
         <div className="hero-title">Code at the<br/>speed of</div>
         <span className="hero-title-accent">Thought.</span>
         <p className="hero-sub">AI-powered professional coding intelligence. Generate, refactor, and optimize production-grade code in seconds.</p>
