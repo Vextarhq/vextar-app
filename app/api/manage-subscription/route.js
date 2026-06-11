@@ -14,16 +14,21 @@ export async function GET() {
 
   const { data: subscription, error } = await supabase
     .from('subscriptions')
-    .select('ls_customer_id')
+    .select('ls_subscription_id, status')
     .eq('user_id', userId)
+    .eq('status', 'active')
+    .not('ls_subscription_id', 'is', null)
+    .order('created_at', { ascending: false })
+    .limit(1)
     .single()
 
-  if (error || !subscription?.ls_customer_id) {
+  if (error || !subscription?.ls_subscription_id) {
     return Response.json({ error: 'No subscription found' }, { status: 404 })
   }
 
+  // Obtener el portal URL via subscription ID
   const res = await fetch(
-    `https://api.lemonsqueezy.com/v1/customers/${subscription.ls_customer_id}/portal`,
+    `https://api.lemonsqueezy.com/v1/subscriptions/${subscription.ls_subscription_id}`,
     {
       headers: {
         'Accept': 'application/vnd.api+json',
@@ -33,7 +38,7 @@ export async function GET() {
   )
 
   if (!res.ok) {
-    return Response.json({ error: 'Failed to get portal URL' }, { status: 500 })
+    return Response.json({ error: 'Failed to get subscription' }, { status: 500 })
   }
 
   const data = await res.json()
