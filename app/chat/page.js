@@ -143,7 +143,6 @@ export default function ChatPage() {
     fetch('/api/history').then(r => r.json()).then(d => setHistory(d.conversations || []))
   }, [sessionId])
 
-
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, loading])
@@ -366,9 +365,6 @@ export default function ChatPage() {
               disabled={managingSubscription}
             >
               {managingSubscription ? '⏳ Loading...' : '⚙ Manage Subscription'}
-            </button>
-            <button onClick={() => window.location.href = '/pricing'} className="new-chat-btn" style={{ background: 'rgba(107,184,212,0.15)', borderColor: 'rgba(107,184,212,0.6)', marginBottom: 0 }}>
-              ⚡ Upgrade to Pro
             </button>
             <button onClick={() => signOut({ redirectUrl: '/landing' })} className="new-chat-btn" style={{ marginBottom: 0 }}>
               Sign Out
