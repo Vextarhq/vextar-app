@@ -224,7 +224,7 @@ export default function Landing() {
       <section className="hero">
         <div className="hero-orb"></div>
         <div className="hero-orb2"></div>
-        <div className="hero-status"><span className="status-dot"></span>Powered by DeepSeek</div>
+        <div className="hero-status"><span className="status-dot"></span>Powered by DeepSeek — Optimized for Professional Coding</div>
         <div className="hero-title">Code at the<br/>speed of</div>
         <span className="hero-title-accent">Thought.</span>
         <p className="hero-sub">AI-powered professional coding intelligence. Generate, refactor, and optimize production-grade code in seconds.</p>
@@ -244,12 +244,6 @@ export default function Landing() {
       </section>
 
       <div className="divider"></div>
-
-      <div className="powered-bar reveal">
-        <span className="powered-dot"></span>
-        <span className="powered-text">Powered by <span>DeepSeek</span> — optimized for professional coding</span>
-        <span className="powered-dot"></span>
-      </div>
 
       <div className="metrics">
         <div className="metric reveal"><div className="metric-val" id="m1">—</div><div className="metric-label">Output accuracy</div></div>
