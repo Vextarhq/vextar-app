@@ -151,7 +151,11 @@ export default function ChatPage() {
   async function handleManageSubscription() {
     setManagingSubscription(true)
     try {
-      const res = await fetch('/api/manage-subscription')
+      const res = await fetch('/api/manage-subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId })
+      })
       const data = await res.json()
       if (data.url) {
         window.open(data.url, '_blank')
