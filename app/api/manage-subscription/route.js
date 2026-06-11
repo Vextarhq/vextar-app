@@ -23,6 +23,7 @@ export async function POST(request) {
     .single()
 
   if (error || !subscription?.ls_subscription_id) {
+    console.log('Supabase error:', error, 'subscription:', subscription)
     return Response.json({ error: 'No subscription found' }, { status: 404 })
   }
 
@@ -36,15 +37,20 @@ export async function POST(request) {
     }
   )
 
+  const lsData = await res.json()
+  console.log('LS response status:', res.status)
+  console.log('LS urls:', JSON.stringify(lsData?.data?.attributes?.urls))
+
   if (!res.ok) {
-    return Response.json({ error: 'Failed to get subscription' }, { status: 500 })
+    return Response.json({ error: 'Failed to get subscription', details: lsData }, { status: 500 })
   }
 
-  const data = await res.json()
-  const portalUrl = data?.data?.attributes?.urls?.customer_portal
+  const urls = lsData?.data?.attributes?.urls
+  const portalUrl = urls?.customer_portal || urls?.customer_portal_update_payment || urls?.update_payment_method
 
   if (!portalUrl) {
-    return Response.json({ error: 'Portal URL not found' }, { status: 500 })
+    console.log('All URLs available:', JSON.stringify(urls))
+    return Response.json({ error: 'Portal URL not found', urls }, { status: 500 })
   }
 
   return Response.json({ url: portalUrl })
