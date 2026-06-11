@@ -12,40 +12,13 @@ function CodeBlock({ code, language }) {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  function handleDownload() {
-    const extensions = {
-      python: 'py', javascript: 'js', typescript: 'ts',
-      jsx: 'jsx', tsx: 'tsx', css: 'css', html: 'html',
-      json: 'json', sql: 'sql', bash: 'sh', shell: 'sh',
-      rust: 'rs', go: 'go', java: 'java', cpp: 'cpp',
-      c: 'c', php: 'php', ruby: 'rb', swift: 'swift',
-      kotlin: 'kt', markdown: 'md', yaml: 'yml', csv: 'csv',
-      txt: 'txt', xml: 'xml', dockerfile: 'dockerfile'
-    }
-    const ext = extensions[language?.toLowerCase()] || 'txt'
-    const blob = new Blob([code], { type: 'text/plain' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `vextar_output.${ext}`
-    a.click()
-    URL.revokeObjectURL(url)
-  }
-
   return (
     <div style={{ position: 'relative', margin: '12px 0', background: '#060810', border: '1px solid rgba(107,184,212,0.25)', borderRadius: '4px', overflow: 'hidden' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 16px', background: 'rgba(107,184,212,0.08)', borderBottom: '1px solid rgba(107,184,212,0.15)' }}>
         <span style={{ fontSize: '10px', letterSpacing: '.15em', textTransform: 'uppercase', color: 'rgba(107,184,212,0.6)', fontFamily: "'Share Tech Mono', monospace" }}>{language || 'code'}</span>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <button onClick={handleDownload} style={{ background: 'transparent', color: 'rgba(232,237,242,0.4)', border: '1px solid rgba(255,255,255,0.1)', padding: '4px 12px', fontFamily: "'Share Tech Mono', monospace", fontSize: '10px', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .2s', borderRadius: '2px' }}
-            onMouseEnter={e => { e.target.style.color = '#6bb8d4'; e.target.style.borderColor = 'rgba(107,184,212,0.6)' }}
-            onMouseLeave={e => { e.target.style.color = 'rgba(232,237,242,0.4)'; e.target.style.borderColor = 'rgba(255,255,255,0.1)' }}>
-            ↓ Download
-          </button>
-          <button onClick={handleCopy} style={{ background: copied ? 'rgba(107,184,212,0.3)' : 'transparent', color: copied ? '#6bb8d4' : 'rgba(232,237,242,0.4)', border: '1px solid', borderColor: copied ? 'rgba(107,184,212,0.6)' : 'rgba(255,255,255,0.1)', padding: '4px 12px', fontFamily: "'Share Tech Mono', monospace", fontSize: '10px', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .2s', borderRadius: '2px' }}>
-            {copied ? '✓ Copied' : 'Copy'}
-          </button>
-        </div>
+        <button onClick={handleCopy} style={{ background: copied ? 'rgba(107,184,212,0.3)' : 'transparent', color: copied ? '#6bb8d4' : 'rgba(232,237,242,0.4)', border: '1px solid', borderColor: copied ? 'rgba(107,184,212,0.6)' : 'rgba(255,255,255,0.1)', padding: '4px 12px', fontFamily: "'Share Tech Mono', monospace", fontSize: '10px', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .2s', borderRadius: '2px' }}>
+          {copied ? '✓ Copied' : 'Copy'}
+        </button>
       </div>
       <pre style={{ margin: 0, padding: '16px', overflowX: 'auto', fontSize: '12px', lineHeight: '1.7', color: '#e8edf2', fontFamily: "'Share Tech Mono', monospace", whiteSpace: 'pre' }}>
         <code>{code}</code>
