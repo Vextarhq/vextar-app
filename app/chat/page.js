@@ -133,7 +133,6 @@ export default function ChatPage() {
   const [limitReached, setLimitReached] = useState(false)
   const [limitType, setLimitType] = useState('free')
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [hasSubscription, setHasSubscription] = useState(false)
   const [managingSubscription, setManagingSubscription] = useState(false)
   const bottomRef = useRef(null)
   const { userId } = useAuth()
@@ -144,15 +143,6 @@ export default function ChatPage() {
     fetch('/api/history').then(r => r.json()).then(d => setHistory(d.conversations || []))
   }, [sessionId])
 
-  useEffect(() => {
-    // Verificar si el usuario tiene suscripción activa
-    fetch('/api/manage-subscription')
-      .then(r => {
-        if (r.ok) setHasSubscription(true)
-        else setHasSubscription(false)
-      })
-      .catch(() => setHasSubscription(false))
-  }, [userId])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -165,9 +155,11 @@ export default function ChatPage() {
       const data = await res.json()
       if (data.url) {
         window.open(data.url, '_blank')
+      } else {
+        window.location.href = '/pricing'
       }
     } catch (e) {
-      console.error('Error opening portal', e)
+      window.location.href = '/pricing'
     } finally {
       setManagingSubscription(false)
     }
@@ -364,15 +356,13 @@ export default function ChatPage() {
             ))}
           </div>
           <div className="sidebar-bottom">
-            {hasSubscription && (
-              <button
-                className="manage-btn"
-                onClick={handleManageSubscription}
-                disabled={managingSubscription}
-              >
-                {managingSubscription ? '⏳ Loading...' : '⚙ Manage Subscription'}
-              </button>
-            )}
+            <button
+              className="manage-btn"
+              onClick={handleManageSubscription}
+              disabled={managingSubscription}
+            >
+              {managingSubscription ? '⏳ Loading...' : '⚙ Manage Subscription'}
+            </button>
             <button onClick={() => window.location.href = '/pricing'} className="new-chat-btn" style={{ background: 'rgba(107,184,212,0.15)', borderColor: 'rgba(107,184,212,0.6)', marginBottom: 0 }}>
               ⚡ Upgrade to Pro
             </button>
