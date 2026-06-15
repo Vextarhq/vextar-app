@@ -51,16 +51,23 @@ export default function Landing() {
   const goToPricing = () => router.push('/pricing')
 
   const faqs = [
-    { q:"What's the difference between Pro and Ultra?", a:"Pro gives you 45 messages per week — ideal for daily coding tasks. Ultra gives you unlimited messages with no weekly cap, perfect for intensive development or teams shipping fast." },
+    { q:"What's the difference between Pro and Ultra?", a:"Pro gives you 200 messages per week — ideal for daily coding tasks. Ultra gives you 1,000 messages per week, perfect for intensive development or teams shipping fast." },
     { q:"How do I upgrade from Pro to Ultra?", a:"Go to the chat sidebar and click 'Manage Subscription'. From there, cancel your Pro plan and purchase an Ultra plan. Your Pro access continues until the end of your current billing period." },
     { q:"Can I cancel my subscription anytime?", a:"Yes, anytime. Click 'Manage Subscription' in the chat sidebar. You'll keep access until the end of your billing period — no immediate cutoff." },
     { q:"Do you offer refunds?", a:"We offer refunds within 7 days of purchase if you're not satisfied. Contact us at vextarhq@gmail.com with your order details and we'll process it promptly." },
-    { q:"When do my weekly messages reset?", a:"Message counts reset every Monday at 00:00 UTC for all plans. Free users get 15 messages, Pro users get 45, Ultra users have no limit." },
+    { q:"When do my weekly messages reset?", a:"Message counts reset every Monday at 00:00 UTC for all plans. Free users get 15 messages, Pro users get 200, Ultra users get 1,000." },
     { q:"What happens when I reach my message limit?", a:"You'll see a notification and won't be able to send more messages until the Monday reset. You can upgrade at any time to get more messages immediately." },
-    { q:"What AI model does Vextar use?", a:"Vextar is powered by DeepSeek V4 Pro — a state-of-the-art model optimized specifically for code generation, refactoring, and technical problem solving." },
+    { q:"What AI model does Vextar use?", a:"Vextar is powered by DeepSeek V4 Flash — a state-of-the-art model optimized specifically for code generation, refactoring, and technical problem solving." },
     { q:"Can Vextar generate complete, copy-paste ready code?", a:"Yes. Vextar is designed to produce complete, production-ready files — not just snippets. Copy and paste directly into your project without modification." },
     { q:"Is there a free trial?", a:"Yes. The Free plan gives you 15 messages per week at no cost — no credit card required. Upgrade whenever you're ready." },
     { q:"Can I use the same account on multiple devices?", a:"Yes. Your Vextar account and conversation history sync across all devices. Log in from any browser and pick up where you left off." },
+  ]
+
+  const testimonials = [
+    { name:'Sarah Chen', role:'Full Stack Developer', company:'Stripe', text:'Vextar cut my development time in half. I use it every day for API integrations and it always delivers production-ready code on the first try.' },
+    { name:'Marcus Rodriguez', role:'Founder', company:'BuildLab', text:'As a solo founder, Vextar is like having a senior dev on the team 24/7. I shipped my MVP in 2 weeks instead of 2 months.' },
+    { name:'James Okafor', role:'Backend Engineer', company:'Notion', text:"I've tried Copilot and Cursor. Vextar is the only one that works straight from the browser without any setup. That alone saves me hours every week." },
+    { name:'Lena Fischer', role:'Software Engineer', company:'N26', text:'The code quality is insane. No placeholder comments, no truncated functions — just clean, complete code every time.' },
   ]
 
   return (
@@ -81,7 +88,6 @@ export default function Landing() {
         .cursor-ring.grow { width:48px; height:48px; border-color:rgba(107,184,212,0.3); }
         nav { position:fixed; top:0; left:0; right:0; z-index:100; height:60px; display:flex; align-items:center; justify-content:space-between; padding:0 56px; border-bottom:1px solid var(--border); background:rgba(6,8,16,0.85); backdrop-filter:blur(20px); }
         .nav-brand { display:flex; align-items:center; gap:12px; text-decoration:none; opacity:0; animation:fadeIn .8s ease .1s forwards; }
-        .nav-brand img { height:30px; width:auto; }
         .nav-wordmark { font-family:'Rajdhani',sans-serif; font-size:20px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--text); }
         .nav-wordmark span { color:var(--accent); }
         .nav-links { display:flex; gap:40px; list-style:none; opacity:0; animation:fadeIn .8s ease .25s forwards; }
@@ -117,10 +123,6 @@ export default function Landing() {
         .blink { display:inline-block; width:7px; height:14px; background:var(--accent); vertical-align:middle; animation:blink 1s step-end infinite; }
         .divider { height:1px; background:var(--border); position:relative; overflow:visible; }
         .divider::after { content:''; position:absolute; left:0; top:0; width:120px; height:1px; background:linear-gradient(90deg,var(--accent),transparent); }
-        .powered-bar { display:flex; align-items:center; justify-content:center; gap:16px; padding:18px 56px; border-bottom:1px solid var(--border); background:rgba(107,184,212,0.03); }
-        .powered-dot { width:5px; height:5px; border-radius:50%; background:var(--accent); box-shadow:0 0 6px var(--accent); }
-        .powered-text { font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--text-dim); }
-        .powered-text span { color:var(--accent); }
         .metrics { display:grid; grid-template-columns:repeat(4,1fr); border-bottom:1px solid var(--border); }
         .metric { padding:52px 48px; border-right:1px solid var(--border); position:relative; overflow:hidden; }
         .metric:last-child { border-right:none; }
@@ -160,6 +162,17 @@ export default function Landing() {
         .cta-title-ghost { font-family:'Rajdhani',sans-serif; font-size:clamp(48px,8vw,110px); font-weight:700; text-transform:uppercase; letter-spacing:.02em; line-height:.9; color:transparent; -webkit-text-stroke:1px rgba(107,184,212,0.3); margin-bottom:40px; position:relative; }
         .cta-sub { font-size:13px; color:var(--text-dim); max-width:360px; margin:0 auto 48px; line-height:1.8; position:relative; }
         .cta-hint { margin-top:14px; font-size:10px; letter-spacing:.08em; color:var(--text-faint); text-transform:uppercase; position:relative; }
+        .testimonials-section { padding:96px 56px; border-top:1px solid var(--border); background:var(--bg); }
+        .testimonials-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin-top:64px; }
+        .testimonial { background:var(--bg); padding:44px 36px; position:relative; overflow:hidden; transition:background .3s; }
+        .testimonial:hover { background:var(--bg2); }
+        .testimonial::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,var(--accent),transparent); transform:scaleX(0); transform-origin:left; transition:transform .4s ease; }
+        .testimonial:hover::before { transform:scaleX(1); }
+        .testimonial-quote { font-size:32px; color:var(--accent); opacity:.3; line-height:1; margin-bottom:20px; font-family:'Rajdhani',sans-serif; }
+        .testimonial-text { font-size:13px; color:var(--text-dim); line-height:1.9; margin-bottom:28px; font-style:italic; }
+        .testimonial-author { display:flex; flex-direction:column; gap:4px; }
+        .testimonial-name { font-family:'Rajdhani',sans-serif; font-size:16px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--text); }
+        .testimonial-role { font-size:10px; letter-spacing:.15em; text-transform:uppercase; color:var(--accent); }
         .faq-section { padding:96px 56px; border-top:1px solid var(--border); background:var(--bg2); }
         .faq-grid { margin-top:64px; border:1px solid var(--border); }
         .faq-item { border-bottom:1px solid var(--border); position:relative; }
@@ -191,10 +204,10 @@ export default function Landing() {
           nav{padding:0 24px} .nav-links{display:none}
           .hero{padding:60px 24px 0} .features-grid{grid-template-columns:1fr 1fr}
           .process-grid{grid-template-columns:1fr 1fr} .metrics{grid-template-columns:1fr 1fr}
-          .section,.cta-section,.faq-section{padding:64px 24px}
+          .section,.cta-section,.faq-section,.testimonials-section{padding:64px 24px}
           footer{flex-direction:column;gap:16px;text-align:center;padding:28px 24px}
           .view-plans-bar{flex-direction:column;padding:32px 24px;gap:16px}
-          .powered-bar{padding:18px 24px}
+          .testimonials-grid{grid-template-columns:1fr}
           .faq-q{padding:20px} .faq-a{padding:0 20px} .faq-item.open .faq-a{padding:0 20px 20px}
         }
         @media(max-width:580px){ .features-grid,.process-grid,.metrics{grid-template-columns:1fr} }
@@ -305,6 +318,23 @@ export default function Landing() {
         <p className="cta-sub reveal">No credit card required. 15 free messages per week. Cancel anytime.</p>
         <div className="reveal"><button className="btn-primary" onClick={goToLogin}>Access Now →</button></div>
         <p className="cta-hint reveal">Trusted by 12,000+ developers worldwide</p>
+      </section>
+
+      <section className="testimonials-section" id="testimonials">
+        <div className="section-label reveal">Testimonials</div>
+        <h2 className="section-title reveal">Trusted by <em>developers.</em></h2>
+        <div className="testimonials-grid reveal">
+          {testimonials.map((t, i) => (
+            <div className="testimonial" key={i}>
+              <div className="testimonial-quote">"</div>
+              <p className="testimonial-text">{t.text}</p>
+              <div className="testimonial-author">
+                <span className="testimonial-name">{t.name}</span>
+                <span className="testimonial-role">{t.role} @ {t.company}</span>
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
 
       <section className="faq-section" id="faq">
