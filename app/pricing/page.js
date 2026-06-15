@@ -84,7 +84,7 @@ export default function PricingPage() {
             <p className="plan-period">Billed monthly</p>
             <p className="plan-save"> </p>
             <ul className="plan-features">
-              <li>45 messages per week</li>
+              <li>200 messages per week</li>
               <li>DeepSeek-powered responses</li>
               <li>Full conversation history</li>
               <li>Priority support</li>
@@ -100,7 +100,7 @@ export default function PricingPage() {
             <p className="plan-period">Billed $96/year</p>
             <p className="plan-save">Save 33% vs monthly</p>
             <ul className="plan-features">
-              <li>45 messages per week</li>
+              <li>200 messages per week</li>
               <li>DeepSeek-powered responses</li>
               <li>Full conversation history</li>
               <li>Priority support</li>
@@ -116,7 +116,7 @@ export default function PricingPage() {
             <p className="plan-period">Billed monthly</p>
             <p className="plan-save gold"> </p>
             <ul className="plan-features">
-              <li>Unlimited messages</li>
+              <li>1,000 messages per week</li>
               <li>DeepSeek-powered responses</li>
               <li>Full conversation history</li>
               <li>Priority support</li>
@@ -132,7 +132,7 @@ export default function PricingPage() {
             <p className="plan-period">Billed $396/year</p>
             <p className="plan-save gold">Save 27% vs monthly</p>
             <ul className="plan-features">
-              <li>Unlimited messages</li>
+              <li>1,000 messages per week</li>
               <li>DeepSeek-powered responses</li>
               <li>Full conversation history</li>
               <li>Priority support</li>
@@ -144,7 +144,7 @@ export default function PricingPage() {
 
         </div>
 
-        <a className="back-link" href="/chat">← Back to chat</a>
+        <a className="back-link" href="/landing">← Back to home</a>
       </div>
     </>
   )
