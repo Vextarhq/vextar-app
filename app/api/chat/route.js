@@ -1,7 +1,9 @@
 import { createClient } from '@supabase/supabase-js'
 
 const FREE_LIMIT = 15
-const PRO_LIMIT = 45
+const PRO_LIMIT = 200
+const ULTRA_LIMIT = 1000
+const CONTEXT_LIMIT = 100
 
 function getWeekKey() {
   const now = new Date()
@@ -38,21 +40,19 @@ export async function POST(req) {
     const isPro = subscription?.status === 'active' && subscription?.plan === 'pro'
     const isUltra = subscription?.status === 'active' && subscription?.plan === 'ultra'
 
-    if (!isUltra) {
-      const week = getWeekKey()
-      const { data: countRow } = await supabase
-        .from('message_counts')
-        .select('count')
-        .eq('user_id', userId)
-        .eq('week', week)
-        .single()
+    const week = getWeekKey()
+    const { data: countRow } = await supabase
+      .from('message_counts')
+      .select('count')
+      .eq('user_id', userId)
+      .eq('week', week)
+      .single()
 
-      const currentCount = countRow?.count || 0
-      const limit = isPro ? PRO_LIMIT : FREE_LIMIT
+    const currentCount = countRow?.count || 0
+    const limit = isUltra ? ULTRA_LIMIT : isPro ? PRO_LIMIT : FREE_LIMIT
 
-      if (currentCount >= limit) {
-        return Response.json({ error: 'limit_reached', count: currentCount, plan: isPro ? 'pro' : 'free' }, { status: 403 })
-      }
+    if (currentCount >= limit) {
+      return Response.json({ error: 'limit_reached', count: currentCount, plan: isUltra ? 'ultra' : isPro ? 'pro' : 'free' }, { status: 403 })
     }
   }
 
@@ -144,7 +144,7 @@ PERSONALITY:
           temperature: 0.3,
           messages: [
             { role: 'system', content: systemPrompt },
-            ...messages
+            ...messages.slice(-CONTEXT_LIMIT)
           ]
         })
       })
