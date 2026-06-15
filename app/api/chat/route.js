@@ -17,8 +17,7 @@ function getWeekKey() {
 }
 
 export async function POST(req) {
-  const { messages, sessionId, title, userId, userEmail } = await req.json()
-  console.log('userId recibido:', userId, 'tipo:', typeof userId)
+  const { messages, sessionId, title, userId, userEmail, imageBase64 } = await req.json()
 
   if (!messages || !Array.isArray(messages)) {
     return Response.json({ error: 'Invalid request' }, { status: 400 })
@@ -57,21 +56,7 @@ export async function POST(req) {
     }
   }
 
-  try {
-    const response = await fetch('https://api.deepseek.com/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'deepseek-chat',
-        max_tokens: 8192,
-        temperature: 0.3,
-        messages: [
-          {
-            role: 'system',
-            content: `You are Vextar, an elite AI-powered coding assistant built for professional developers and entrepreneurs. You combine deep technical expertise with real-world practicality.
+  const systemPrompt = `You are Vextar, an elite AI-powered coding assistant built for professional developers and entrepreneurs. You combine deep technical expertise with real-world practicality.
 
 CORE BEHAVIOR:
 - Always respond in the same language the user writes in
@@ -108,24 +93,75 @@ PERSONALITY:
 - Professional but approachable
 - Confident, never uncertain
 - Solutions-focused, not excuse-focused`
-          },
-          ...messages
-        ]
-      })
-    })
 
-    if (!response.ok) {
-      const error = await response.json()
-      return Response.json({ error: error.error?.message || 'API error' }, { status: response.status })
+  try {
+    let reply
+
+    // Si hay imagen → usar GPT-4o-mini (visión)
+    if (imageBase64) {
+      const lastUserMessage = messages[messages.length - 1]?.content || ''
+      const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          max_tokens: 4096,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            {
+              role: 'user',
+              content: [
+                { type: 'text', text: lastUserMessage || 'Analyze this image and help me with the code.' },
+                { type: 'image_url', image_url: { url: imageBase64 } }
+              ]
+            }
+          ]
+        })
+      })
+
+      if (!openaiRes.ok) {
+        const err = await openaiRes.json()
+        return Response.json({ error: err.error?.message || 'Vision API error' }, { status: openaiRes.status })
+      }
+
+      const openaiData = await openaiRes.json()
+      reply = openaiData.choices[0].message.content
+
+    } else {
+      // Sin imagen → usar DeepSeek V4 Flash
+      const deepseekRes = await fetch('https://api.deepseek.com/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: 'deepseek-v4-flash',
+          max_tokens: 8192,
+          temperature: 0.3,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            ...messages
+          ]
+        })
+      })
+
+      if (!deepseekRes.ok) {
+        const err = await deepseekRes.json()
+        return Response.json({ error: err.error?.message || 'API error' }, { status: deepseekRes.status })
+      }
+
+      const deepseekData = await deepseekRes.json()
+      reply = deepseekData.choices[0].message.content
     }
 
-    const data = await response.json()
-    const reply = data.choices[0].message.content
     const allMessages = [...messages, { role: 'assistant', content: reply }]
 
     if (userId) {
       const week = getWeekKey()
-
       const { data: existingRow } = await supabase
         .from('message_counts')
         .select('id, count')
@@ -134,23 +170,15 @@ PERSONALITY:
         .single()
 
       if (existingRow) {
-        await supabase
-          .from('message_counts')
-          .update({ count: existingRow.count + 1 })
-          .eq('id', existingRow.id)
+        await supabase.from('message_counts').update({ count: existingRow.count + 1 }).eq('id', existingRow.id)
       } else {
-        await supabase
-          .from('message_counts')
-          .insert({ user_id: userId, week: week, count: 1, month: new Date().toISOString().slice(0, 7) })
+        await supabase.from('message_counts').insert({ user_id: userId, week: week, count: 1, month: new Date().toISOString().slice(0, 7) })
       }
 
       const sessionTitle = title || messages[0]?.content?.slice(0, 50) || 'New chat'
 
       if (sessionId) {
-        await supabase.from('conversations').update({
-          messages: allMessages,
-          updated_at: new Date().toISOString()
-        }).eq('id', sessionId)
+        await supabase.from('conversations').update({ messages: allMessages, updated_at: new Date().toISOString() }).eq('id', sessionId)
         return Response.json({ reply, sessionId })
       } else {
         const { data: created } = await supabase.from('conversations').insert({
