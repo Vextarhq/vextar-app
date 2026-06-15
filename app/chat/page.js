@@ -407,8 +407,8 @@ export default function ChatPage() {
                 <button className="attach-btn" onClick={() => setShowAttachMenu(!showAttachMenu)} disabled={limitReached}>📎</button>
                 {showAttachMenu && (
                   <div className="attach-menu">
-                    <button onPointerDown={() => { fileInputRef.current.click(); setShowAttachMenu(false) }}>🖼 Upload Image</button>
-                    <button onPointerDown={() => { cameraInputRef.current.click(); setShowAttachMenu(false) }}>📷 Take Photo</button>
+                    <button onClick={() => { setShowAttachMenu(false); setTimeout(() => fileInputRef.current.click(), 100) }}>🖼 Upload Image</button>
+                    <button onClick={() => { setShowAttachMenu(false); setTimeout(() => cameraInputRef.current.click(), 100) }}>📷 Take Photo</button>
                   </div>
                 )}
               </div>
