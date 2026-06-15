@@ -98,7 +98,7 @@ export default function Landing() {
         .btn-primary:hover { opacity:.85; box-shadow:0 0 24px var(--accent-glow); }
         .btn-ghost { font-family:'Share Tech Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-dim); background:transparent; padding:10px 24px; border:1px solid var(--border); cursor:none; text-decoration:none; display:inline-flex; align-items:center; gap:8px; transition:color .2s,border-color .2s; clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px)); }
         .btn-ghost:hover { color:var(--accent); border-color:var(--border-bright); }
-        .hero { min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:120px 56px 120px; position:relative; overflow:hidden; }
+        .hero { min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:120px 56px 200px; position:relative; overflow:hidden; }
         .hero-orb { position:absolute; top:-20%; right:-10%; width:700px; height:700px; border-radius:50%; background:radial-gradient(circle,rgba(107,184,212,0.06) 0%,transparent 65%); animation:orbPulse 8s ease-in-out infinite; pointer-events:none; }
         .hero-orb2 { position:absolute; bottom:-30%; left:-15%; width:500px; height:500px; border-radius:50%; background:radial-gradient(circle,rgba(107,184,212,0.04) 0%,transparent 65%); animation:orbPulse 10s ease-in-out 2s infinite; pointer-events:none; }
         @keyframes orbPulse { 0%,100%{transform:scale(1);opacity:.8} 50%{transform:scale(1.15);opacity:1} }
@@ -202,7 +202,7 @@ export default function Landing() {
         @media(max-width:1100px){ .terminal{display:none} }
         @media(max-width:900px){
           nav{padding:0 24px} .nav-links{display:none}
-          .hero{padding:60px 24px 0} .features-grid{grid-template-columns:1fr 1fr}
+          .hero{padding:80px 24px 200px} .features-grid{grid-template-columns:1fr 1fr}
           .process-grid{grid-template-columns:1fr 1fr} .metrics{grid-template-columns:1fr 1fr}
           .section,.cta-section,.faq-section,.testimonials-section{padding:64px 24px}
           footer{flex-direction:column;gap:16px;text-align:center;padding:28px 24px}
