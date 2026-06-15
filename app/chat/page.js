@@ -403,16 +403,14 @@ export default function ChatPage() {
               </div>
             )}
             <div className="input-row">
-              <div style={{ position: 'relative' }}>
-                <button className="attach-btn" onClick={() => setShowAttachMenu(!showAttachMenu)} disabled={limitReached}>
-                  📎
-                  {showAttachMenu && (
-                    <div className="attach-menu">
-                      <button onClick={() => { fileInputRef.current.click(); setShowAttachMenu(false) }}>🖼 Upload Image</button>
-                      <button onClick={() => { cameraInputRef.current.click(); setShowAttachMenu(false) }}>📷 Take Photo</button>
-                    </div>
-                  )}
-                </button>
+              <div style={{ position: 'relative', flexShrink: 0, alignSelf: 'flex-end' }}>
+                <button className="attach-btn" onClick={() => setShowAttachMenu(!showAttachMenu)} disabled={limitReached}>📎</button>
+                {showAttachMenu && (
+                  <div className="attach-menu">
+                    <button onPointerDown={() => { fileInputRef.current.click(); setShowAttachMenu(false) }}>🖼 Upload Image</button>
+                    <button onPointerDown={() => { cameraInputRef.current.click(); setShowAttachMenu(false) }}>📷 Take Photo</button>
+                  </div>
+                )}
               </div>
               <div className={`input-wrapper ${limitReached ? 'disabled' : ''}`}>
                 <textarea
