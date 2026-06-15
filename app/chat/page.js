@@ -5,13 +5,11 @@ import { useClerk, useUser } from '@clerk/nextjs'
 
 function CodeBlock({ code, language }) {
   const [copied, setCopied] = useState(false)
-
   function handleCopy() {
     navigator.clipboard.writeText(code)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
-
   return (
     <div style={{ position: 'relative', margin: '12px 0', background: '#060810', border: '1px solid rgba(107,184,212,0.25)', borderRadius: '4px', overflow: 'hidden' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 16px', background: 'rgba(107,184,212,0.08)', borderBottom: '1px solid rgba(107,184,212,0.15)' }}>
@@ -30,35 +28,24 @@ function CodeBlock({ code, language }) {
 function renderInline(text) {
   const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)/g)
   return parts.map((part, i) => {
-    if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={i} style={{ color: '#e8edf2', fontWeight: 600 }}>{part.slice(2, -2)}</strong>
-    }
-    if (part.startsWith('*') && part.endsWith('*')) {
-      return <em key={i}>{part.slice(1, -1)}</em>
-    }
-    if (part.startsWith('`') && part.endsWith('`')) {
-      return <code key={i} style={{ background: 'rgba(107,184,212,0.1)', color: '#6bb8d4', padding: '1px 6px', borderRadius: '3px', fontSize: '11px', fontFamily: "'Share Tech Mono', monospace" }}>{part.slice(1, -1)}</code>
-    }
+    if (part.startsWith('**') && part.endsWith('**')) return <strong key={i} style={{ color: '#e8edf2', fontWeight: 600 }}>{part.slice(2, -2)}</strong>
+    if (part.startsWith('*') && part.endsWith('*')) return <em key={i}>{part.slice(1, -1)}</em>
+    if (part.startsWith('`') && part.endsWith('`')) return <code key={i} style={{ background: 'rgba(107,184,212,0.1)', color: '#6bb8d4', padding: '1px 6px', borderRadius: '3px', fontSize: '11px', fontFamily: "'Share Tech Mono', monospace" }}>{part.slice(1, -1)}</code>
     return part
   })
 }
 
-function MessageContent({ content }) {
+function MessageContent({ content, image }) {
   const codeBlockRegex = /```(\w*)\n?([\s\S]*?)```/g
   const segments = []
   let lastIndex = 0
   let match
-
   while ((match = codeBlockRegex.exec(content)) !== null) {
-    if (match.index > lastIndex) {
-      segments.push({ type: 'text', content: content.slice(lastIndex, match.index) })
-    }
+    if (match.index > lastIndex) segments.push({ type: 'text', content: content.slice(lastIndex, match.index) })
     segments.push({ type: 'code', language: match[1], content: match[2] })
     lastIndex = match.index + match[0].length
   }
-  if (lastIndex < content.length) {
-    segments.push({ type: 'text', content: content.slice(lastIndex) })
-  }
+  if (lastIndex < content.length) segments.push({ type: 'text', content: content.slice(lastIndex) })
 
   function renderText(text) {
     const lines = text.split('\n')
@@ -75,37 +62,13 @@ function MessageContent({ content }) {
         result.push(<div key={i} style={{ fontSize: sizes[level] || '13px', fontWeight: 700, color: '#6bb8d4', margin: '12px 0 6px', fontFamily: "'Rajdhani', sans-serif", letterSpacing: '.05em' }}>{renderInline(txt)}</div>)
       } else if (/^[-*]\s/.test(line.trim())) {
         const items = []
-        while (i < lines.length && /^[-*]\s/.test(lines[i].trim())) {
-          items.push(lines[i].trim().replace(/^[-*]\s/, ''))
-          i++
-        }
-        result.push(
-          <ul key={i} style={{ paddingLeft: '16px', margin: '6px 0', listStyle: 'none' }}>
-            {items.map((item, j) => (
-              <li key={j} style={{ position: 'relative', paddingLeft: '14px', marginBottom: '4px', lineHeight: '1.6' }}>
-                <span style={{ position: 'absolute', left: 0, color: '#6bb8d4' }}>›</span>
-                {renderInline(item)}
-              </li>
-            ))}
-          </ul>
-        )
+        while (i < lines.length && /^[-*]\s/.test(lines[i].trim())) { items.push(lines[i].trim().replace(/^[-*]\s/, '')); i++ }
+        result.push(<ul key={i} style={{ paddingLeft: '16px', margin: '6px 0', listStyle: 'none' }}>{items.map((item, j) => <li key={j} style={{ position: 'relative', paddingLeft: '14px', marginBottom: '4px', lineHeight: '1.6' }}><span style={{ position: 'absolute', left: 0, color: '#6bb8d4' }}>›</span>{renderInline(item)}</li>)}</ul>)
         continue
       } else if (/^\d+\.\s/.test(line.trim())) {
         const items = []
-        while (i < lines.length && /^\d+\.\s/.test(lines[i].trim())) {
-          items.push(lines[i].trim().replace(/^\d+\.\s/, ''))
-          i++
-        }
-        result.push(
-          <ol key={i} style={{ paddingLeft: '16px', margin: '6px 0', listStyle: 'none' }}>
-            {items.map((item, j) => (
-              <li key={j} style={{ position: 'relative', paddingLeft: '20px', marginBottom: '4px', lineHeight: '1.6' }}>
-                <span style={{ position: 'absolute', left: 0, color: '#6bb8d4', fontSize: '11px' }}>{j + 1}.</span>
-                {renderInline(item)}
-              </li>
-            ))}
-          </ol>
-        )
+        while (i < lines.length && /^\d+\.\s/.test(lines[i].trim())) { items.push(lines[i].trim().replace(/^\d+\.\s/, '')); i++ }
+        result.push(<ol key={i} style={{ paddingLeft: '16px', margin: '6px 0', listStyle: 'none' }}>{items.map((item, j) => <li key={j} style={{ position: 'relative', paddingLeft: '20px', marginBottom: '4px', lineHeight: '1.6' }}><span style={{ position: 'absolute', left: 0, color: '#6bb8d4', fontSize: '11px' }}>{j + 1}.</span>{renderInline(item)}</li>)}</ol>)
         continue
       } else {
         result.push(<div key={i} style={{ lineHeight: '1.7', marginBottom: '2px' }}>{renderInline(line)}</div>)
@@ -117,11 +80,8 @@ function MessageContent({ content }) {
 
   return (
     <div style={{ fontSize: '13px', color: '#e8edf2' }}>
-      {segments.map((seg, i) =>
-        seg.type === 'code'
-          ? <CodeBlock key={i} code={seg.content} language={seg.language} />
-          : <div key={i}>{renderText(seg.content)}</div>
-      )}
+      {image && <img src={image} alt="attached" style={{ maxWidth: '100%', maxHeight: '200px', borderRadius: '4px', marginBottom: '8px', border: '1px solid rgba(107,184,212,0.25)', objectFit: 'contain' }} />}
+      {segments.map((seg, i) => seg.type === 'code' ? <CodeBlock key={i} code={seg.content} language={seg.language} /> : <div key={i}>{renderText(seg.content)}</div>)}
     </div>
   )
 }
@@ -136,7 +96,12 @@ export default function ChatPage() {
   const [limitType, setLimitType] = useState('free')
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [managingSubscription, setManagingSubscription] = useState(false)
+  const [attachedImage, setAttachedImage] = useState(null)
+  const [imagePreview, setImagePreview] = useState(null)
+  const [showAttachMenu, setShowAttachMenu] = useState(false)
   const bottomRef = useRef(null)
+  const fileInputRef = useRef(null)
+  const cameraInputRef = useRef(null)
   const { userId } = useAuth()
   const { user } = useUser()
   const { signOut } = useClerk()
@@ -149,6 +114,26 @@ export default function ChatPage() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, loading])
 
+  function handleFileChange(e) {
+    const file = e.target.files[0]
+    if (!file) return
+    if (!file.type.startsWith('image/')) { alert('Only images are supported'); return }
+    if (file.size > 5 * 1024 * 1024) { alert('Image must be under 5MB'); return }
+    const reader = new FileReader()
+    reader.onload = ev => {
+      setAttachedImage(ev.target.result)
+      setImagePreview(ev.target.result)
+    }
+    reader.readAsDataURL(file)
+    setShowAttachMenu(false)
+    e.target.value = ''
+  }
+
+  function removeImage() {
+    setAttachedImage(null)
+    setImagePreview(null)
+  }
+
   async function handleManageSubscription() {
     setManagingSubscription(true)
     try {
@@ -158,11 +143,8 @@ export default function ChatPage() {
         body: JSON.stringify({ userId })
       })
       const data = await res.json()
-      if (data.url) {
-        window.location.href = data.url
-      } else {
-        window.location.href = '/pricing'
-      }
+      if (data.url) window.location.href = data.url
+      else window.location.href = '/pricing'
     } catch (e) {
       window.location.href = '/pricing'
     } finally {
@@ -171,11 +153,19 @@ export default function ChatPage() {
   }
 
   async function sendMessage() {
-    if (!input.trim() || loading || limitReached || !userId) return
-    const userMsg = { role: 'user', content: input }
+    if ((!input.trim() && !attachedImage) || loading || limitReached || !userId) return
+    const userMsg = {
+      role: 'user',
+      content: input || '(Image attached)',
+      image: imagePreview || undefined
+    }
     const newMessages = [...messages, userMsg]
     setMessages(newMessages)
+    const sentInput = input
+    const sentImage = attachedImage
     setInput('')
+    setAttachedImage(null)
+    setImagePreview(null)
     setLoading(true)
 
     const userEmail = user?.primaryEmailAddress?.emailAddress || null
@@ -183,7 +173,13 @@ export default function ChatPage() {
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: newMessages, sessionId, userId, userEmail })
+      body: JSON.stringify({
+        messages: newMessages.map(m => ({ role: m.role, content: m.content })),
+        sessionId,
+        userId,
+        userEmail,
+        imageBase64: sentImage || undefined
+      })
     })
 
     if (res.status === 403) {
@@ -212,6 +208,8 @@ export default function ChatPage() {
   function newChat() {
     setMessages([])
     setSessionId(null)
+    setAttachedImage(null)
+    setImagePreview(null)
     setSidebarOpen(false)
   }
 
@@ -231,12 +229,7 @@ export default function ChatPage() {
           --text-faint: rgba(232,237,242,0.2);
         }
         html, body { height: 100%; overflow: hidden; }
-        .chat-layout {
-          height: 100dvh; background: var(--bg); color: var(--text);
-          font-family: 'Share Tech Mono', monospace; display: flex;
-          overflow: hidden; padding-top: env(safe-area-inset-top);
-          padding-bottom: env(safe-area-inset-bottom);
-        }
+        .chat-layout { height: 100dvh; background: var(--bg); color: var(--text); font-family: 'Share Tech Mono', monospace; display: flex; overflow: hidden; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
         .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(6,8,16,0.7); z-index: 99; backdrop-filter: blur(2px); }
         .sidebar-overlay.open { display: block; }
         .sidebar { width: 260px; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; overflow: hidden; }
@@ -280,7 +273,8 @@ export default function ChatPage() {
         .typing-dots span:nth-child(2) { animation-delay: .2s; }
         .typing-dots span:nth-child(3) { animation-delay: .4s; }
         @keyframes dotPulse { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
-        .input-area { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; gap: 12px; align-items: flex-end; flex-shrink: 0; background: var(--bg); }
+        .input-area { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; background: var(--bg); }
+        .input-row { display: flex; gap: 12px; align-items: flex-end; }
         .input-wrapper { flex: 1; border: 1px solid var(--border); background: var(--bg2); clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px)); transition: border-color .2s; }
         .input-wrapper:focus-within { border-color: var(--border-bright); }
         .input-wrapper.disabled { opacity: .4; pointer-events: none; }
@@ -289,6 +283,15 @@ export default function ChatPage() {
         .send-btn { background: var(--accent); color: #060810; border: none; padding: 14px 22px; font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; transition: opacity .2s, box-shadow .2s; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px)); flex-shrink: 0; align-self: flex-end; height: 48px; }
         .send-btn:hover { opacity: .85; box-shadow: 0 0 20px var(--accent-glow); }
         .send-btn:disabled { opacity: .4; cursor: not-allowed; }
+        .attach-btn { background: transparent; border: 1px solid var(--border); color: var(--text-dim); width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; align-self: flex-end; transition: all .2s; clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px)); font-size: 18px; position: relative; }
+        .attach-btn:hover { border-color: var(--border-bright); color: var(--accent); background: var(--accent-glow); }
+        .attach-menu { position: absolute; bottom: 60px; left: 0; background: var(--bg2); border: 1px solid var(--border-bright); min-width: 180px; z-index: 50; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); }
+        .attach-menu button { display: flex; align-items: center; gap: 10px; width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border); padding: 12px 16px; color: var(--text-dim); font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; transition: all .2s; }
+        .attach-menu button:last-child { border-bottom: none; }
+        .attach-menu button:hover { background: var(--accent-glow); color: var(--accent); }
+        .image-preview { position: relative; display: inline-block; }
+        .image-preview img { max-height: 80px; max-width: 120px; border-radius: 4px; border: 1px solid var(--border-bright); object-fit: cover; }
+        .image-preview-remove { position: absolute; top: -6px; right: -6px; background: #ff5f57; border: none; border-radius: 50%; width: 18px; height: 18px; color: white; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .modal-overlay { position: fixed; inset: 0; z-index: 999; background: rgba(6,8,16,0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; }
         .modal { background: var(--bg2); border: 1px solid var(--border-bright); padding: 48px 40px; max-width: 480px; width: 90%; text-align: center; position: relative; clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px)); }
         .modal::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); }
@@ -311,6 +314,9 @@ export default function ChatPage() {
         }
       `}</style>
 
+      <input ref={fileInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFileChange} />
+      <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" style={{ display: 'none' }} onChange={handleFileChange} />
+
       {limitReached && (
         <div className="modal-overlay">
           <div className="modal">
@@ -321,9 +327,7 @@ export default function ChatPage() {
             ) : (
               <p className="modal-desc">You've used your 15 free messages this week. Upgrade to Pro for 45 messages/week or Ultra for unlimited access.</p>
             )}
-            <button className="modal-btn" onClick={() => window.location.href = '/pricing'}>
-              View plans →
-            </button>
+            <button className="modal-btn" onClick={() => window.location.href = '/pricing'}>View plans →</button>
           </div>
         </div>
       )}
@@ -339,11 +343,7 @@ export default function ChatPage() {
           </div>
           <div className="history-list">
             {history.map(conv => (
-              <button
-                key={conv.id}
-                className={`history-item ${sessionId === conv.id ? 'active' : ''}`}
-                onClick={() => loadConversation(conv)}
-              >
+              <button key={conv.id} className={`history-item ${sessionId === conv.id ? 'active' : ''}`} onClick={() => loadConversation(conv)}>
                 {conv.title || 'Sin título'}
               </button>
             ))}
@@ -352,9 +352,7 @@ export default function ChatPage() {
             <button className="manage-btn" onClick={handleManageSubscription} disabled={managingSubscription}>
               {managingSubscription ? '⏳ Loading...' : '⚙ Manage Subscription'}
             </button>
-            <button onClick={() => signOut({ redirectUrl: '/landing' })} className="new-chat-btn" style={{ marginBottom: 0 }}>
-              Sign Out
-            </button>
+            <button onClick={() => signOut({ redirectUrl: '/landing' })} className="new-chat-btn" style={{ marginBottom: 0 }}>Sign Out</button>
           </div>
         </aside>
 
@@ -380,7 +378,7 @@ export default function ChatPage() {
                 <div className={`msg-bubble ${m.role}`}>
                   {m.role === 'assistant'
                     ? <MessageContent content={m.content} />
-                    : m.content
+                    : <MessageContent content={m.content} image={m.image} />
                   }
                 </div>
               </div>
@@ -398,25 +396,39 @@ export default function ChatPage() {
           </div>
 
           <div className="input-area">
-            <div className={`input-wrapper ${limitReached ? 'disabled' : ''}`}>
-              <textarea
-                className="chat-input"
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyDown={e => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault()
-                    sendMessage()
-                  }
-                }}
-                placeholder={limitReached ? 'Limit reached' : 'Describe the code you need... (Enter to send)'}
-                rows={1}
-                disabled={limitReached}
-              />
+            {imagePreview && (
+              <div className="image-preview">
+                <img src={imagePreview} alt="preview" />
+                <button className="image-preview-remove" onClick={removeImage}>✕</button>
+              </div>
+            )}
+            <div className="input-row">
+              <div style={{ position: 'relative' }}>
+                <button className="attach-btn" onClick={() => setShowAttachMenu(!showAttachMenu)} disabled={limitReached}>
+                  📎
+                  {showAttachMenu && (
+                    <div className="attach-menu">
+                      <button onClick={() => { fileInputRef.current.click(); setShowAttachMenu(false) }}>🖼 Upload Image</button>
+                      <button onClick={() => { cameraInputRef.current.click(); setShowAttachMenu(false) }}>📷 Take Photo</button>
+                    </div>
+                  )}
+                </button>
+              </div>
+              <div className={`input-wrapper ${limitReached ? 'disabled' : ''}`}>
+                <textarea
+                  className="chat-input"
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage() } }}
+                  placeholder={limitReached ? 'Limit reached' : 'Describe the code you need... (Enter to send)'}
+                  rows={1}
+                  disabled={limitReached}
+                />
+              </div>
+              <button className="send-btn" onClick={sendMessage} disabled={loading || (!input.trim() && !attachedImage) || limitReached}>
+                Send →
+              </button>
             </div>
-            <button className="send-btn" onClick={sendMessage} disabled={loading || !input.trim() || limitReached}>
-              Send →
-            </button>
           </div>
         </main>
       </div>
