@@ -158,7 +158,13 @@ PERSONALITY:
       reply = deepseekData.choices[0].message.content
     }
 
-    const allMessages = [...messages, { role: 'assistant', content: reply }]
+    // Construir el mensaje del usuario con imagen si existe
+    const lastUserMsg = messages[messages.length - 1]
+    const messagesWithImage = imageBase64
+      ? [...messages.slice(0, -1), { ...lastUserMsg, image: imageBase64 }]
+      : messages
+
+    const allMessages = [...messagesWithImage, { role: 'assistant', content: reply }]
 
     if (userId) {
       const week = getWeekKey()
