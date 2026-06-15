@@ -64,10 +64,10 @@ export default function Landing() {
   ]
 
   const testimonials = [
-    { name:'Sarah Chen', role:'Full Stack Developer', company:'Stripe', text:'Vextar cut my development time in half. I use it every day for API integrations and it always delivers production-ready code on the first try.' },
-    { name:'Marcus Rodriguez', role:'Founder', company:'BuildLab', text:'As a solo founder, Vextar is like having a senior dev on the team 24/7. I shipped my MVP in 2 weeks instead of 2 months.' },
-    { name:'James Okafor', role:'Backend Engineer', company:'Notion', text:"I've tried Copilot and Cursor. Vextar is the only one that works straight from the browser without any setup. That alone saves me hours every week." },
-    { name:'Lena Fischer', role:'Software Engineer', company:'N26', text:'The code quality is insane. No placeholder comments, no truncated functions — just clean, complete code every time.' },
+    { name:'Sarah Chen', role:'Full Stack Developer', text:'Vextar cut my development time in half. I use it every day for API integrations and it always delivers production-ready code on the first try.' },
+    { name:'Marcus Rodriguez', role:'Founder', text:'As a solo founder, Vextar is like having a senior dev on the team 24/7. I shipped my MVP in 2 weeks instead of 2 months.' },
+    { name:'James Okafor', role:'Backend Engineer', text:"I've tried Copilot and Cursor. Vextar is the only one that works straight from the browser without any setup. That alone saves me hours every week." },
+    { name:'Lena Fischer', role:'Software Engineer', text:'The code quality is insane. No placeholder comments, no truncated functions — just clean, complete code every time.' },
   ]
 
   return (
@@ -98,7 +98,7 @@ export default function Landing() {
         .btn-primary:hover { opacity:.85; box-shadow:0 0 24px var(--accent-glow); }
         .btn-ghost { font-family:'Share Tech Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-dim); background:transparent; padding:10px 24px; border:1px solid var(--border); cursor:none; text-decoration:none; display:inline-flex; align-items:center; gap:8px; transition:color .2s,border-color .2s; clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px)); }
         .btn-ghost:hover { color:var(--accent); border-color:var(--border-bright); }
-        .hero { min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:60px 56px 0; position:relative; overflow:hidden; }
+        .hero { min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:120px 56px 120px; position:relative; overflow:hidden; }
         .hero-orb { position:absolute; top:-20%; right:-10%; width:700px; height:700px; border-radius:50%; background:radial-gradient(circle,rgba(107,184,212,0.06) 0%,transparent 65%); animation:orbPulse 8s ease-in-out infinite; pointer-events:none; }
         .hero-orb2 { position:absolute; bottom:-30%; left:-15%; width:500px; height:500px; border-radius:50%; background:radial-gradient(circle,rgba(107,184,212,0.04) 0%,transparent 65%); animation:orbPulse 10s ease-in-out 2s infinite; pointer-events:none; }
         @keyframes orbPulse { 0%,100%{transform:scale(1);opacity:.8} 50%{transform:scale(1.15);opacity:1} }
@@ -330,7 +330,7 @@ export default function Landing() {
               <p className="testimonial-text">{t.text}</p>
               <div className="testimonial-author">
                 <span className="testimonial-name">{t.name}</span>
-                <span className="testimonial-role">{t.role} @ {t.company}</span>
+                <span className="testimonial-role">{t.role}</span>
               </div>
             </div>
           ))}
