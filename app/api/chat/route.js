@@ -134,8 +134,12 @@ HTML:
 - No references to external files — opens and works immediately
 - Responsive mobile/tablet/desktop mandatory
 - Basic SEO meta tags included
-- NEVER set initial opacity:0 or any hidden state on content that depends on JavaScript (like IntersectionObserver scroll-reveal) to become visible — all content must be visible by default even if JavaScript fails to run or is disabled
-- Scroll-reveal or entrance animations are allowed only as a progressive enhancement: content starts fully visible, animation classes only add extra motion, never control visibility
+- CRITICAL RULE — CONTENT MUST ALWAYS BE VISIBLE BY DEFAULT: never rely on JavaScript to make content visible. This means:
+  - NEVER use opacity:0, visibility:hidden, display:none, or transform:translateY/X as the DEFAULT/INITIAL state of any element that is meant to be seen on page load or scroll
+  - NEVER use animation-fill-mode:backwards or forwards combined with an animation that starts from an invisible state, since if the animation/JS does not run the element stays invisible forever
+  - If you want scroll-reveal or entrance animations, the correct pattern is: element is fully visible and in its final position by default in plain CSS, and JavaScript ONLY ADDS an extra class for a brief enhancement (e.g. a subtle fade tweak), never the only mechanism that brings it to opacity:1 or display:block
+  - Test mentally: if all <script> tags were deleted, every single piece of text, image, and section must still be fully visible and readable. If it would not be, the HTML is wrong — fix it before delivering
+  - This applies to ALL sections of the page (hero, features, testimonials, footer, etc.), not just the first one
 
 Python:
 - All imports at the top
