@@ -130,7 +130,7 @@ FILE GENERATION BY TYPE:
 HTML:
 - All CSS inside <style>, all JS inside <script> — single self-contained file
 - Fonts via @import url() Google Fonts
-- Images: inline SVG or real Unsplash/Picsum URLs
+- Images: PREFER inline SVG (drawn with <svg> elements) for icons, illustrations, logos, and decorative graphics — this guarantees the image always renders correctly, even offline or in restrictive viewers like the iOS Files app preview. Only use external URLs (Unsplash/Picsum) for realistic photographic content (e.g. hero photos of people, products, real-world scenes) where SVG cannot substitute, and even then mention in your reply that those specific images require an internet connection to display
 - No references to external files — opens and works immediately
 - Responsive mobile/tablet/desktop mandatory
 - Basic SEO meta tags included
