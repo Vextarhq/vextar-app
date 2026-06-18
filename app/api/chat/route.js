@@ -297,7 +297,7 @@ PERSONALITY:
         },
         body: JSON.stringify({
           model: 'deepseek-v4-flash',
-          max_tokens: 16000,
+          max_tokens: 32000,
           temperature: 0.3,
           messages: [
             { role: 'system', content: systemPrompt },
