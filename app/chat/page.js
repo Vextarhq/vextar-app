@@ -13,31 +13,60 @@ function CodeBlock({ code, language }) {
   }
 
   function handleDownload() {
-    const extensions = {
-      python: 'py', javascript: 'js', typescript: 'ts',
-      jsx: 'jsx', tsx: 'tsx', css: 'css', html: 'html',
-      json: 'json', sql: 'sql', bash: 'sh', shell: 'sh',
-      rust: 'rs', go: 'go', java: 'java', cpp: 'cpp',
-      c: 'c', php: 'php', ruby: 'rb', swift: 'swift',
-      kotlin: 'kt', markdown: 'md', yaml: 'yml', csv: 'csv',
-      txt: 'txt', xml: 'xml', dockerfile: 'dockerfile', env: 'env'
+    const extMap = {
+      python: { ext: 'py', mime: 'text/x-python' },
+      javascript: { ext: 'js', mime: 'text/javascript' },
+      typescript: { ext: 'ts', mime: 'text/typescript' },
+      jsx: { ext: 'jsx', mime: 'text/javascript' },
+      tsx: { ext: 'tsx', mime: 'text/typescript' },
+      css: { ext: 'css', mime: 'text/css' },
+      html: { ext: 'html', mime: 'text/html' },
+      json: { ext: 'json', mime: 'application/json' },
+      sql: { ext: 'sql', mime: 'text/plain' },
+      bash: { ext: 'sh', mime: 'text/x-sh' },
+      shell: { ext: 'sh', mime: 'text/x-sh' },
+      rust: { ext: 'rs', mime: 'text/plain' },
+      go: { ext: 'go', mime: 'text/plain' },
+      java: { ext: 'java', mime: 'text/x-java' },
+      cpp: { ext: 'cpp', mime: 'text/x-c++src' },
+      c: { ext: 'c', mime: 'text/x-csrc' },
+      php: { ext: 'php', mime: 'text/x-php' },
+      ruby: { ext: 'rb', mime: 'text/x-ruby' },
+      swift: { ext: 'swift', mime: 'text/plain' },
+      kotlin: { ext: 'kt', mime: 'text/plain' },
+      markdown: { ext: 'md', mime: 'text/markdown' },
+      yaml: { ext: 'yml', mime: 'text/yaml' },
+      xml: { ext: 'xml', mime: 'text/xml' },
+      csv: { ext: 'csv', mime: 'text/csv' },
+      dockerfile: { ext: 'dockerfile', mime: 'text/plain' },
+      env: { ext: 'env', mime: 'text/plain' },
+      txt: { ext: 'txt', mime: 'text/plain' },
     }
-    const ext = extensions[language?.toLowerCase()] || language?.toLowerCase() || 'txt'
+    const key = language?.toLowerCase() || ''
+    const { ext, mime } = extMap[key] || { ext: key || 'txt', mime: 'text/plain' }
+    const filename = `vextar_output.${ext}`
     try {
-      const base64 = btoa(unescape(encodeURIComponent(code)))
-      const dataUrl = `data:text/plain;base64,${base64}`
+      const blob = new Blob([code], { type: mime })
+      const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
-      a.href = dataUrl
-      a.download = `vextar_output.${ext}`
+      a.href = url
+      a.download = filename
       document.body.appendChild(a)
       a.click()
-      setTimeout(() => document.body.removeChild(a), 100)
+      setTimeout(() => { URL.revokeObjectURL(url); document.body.removeChild(a) }, 200)
     } catch (e) {
-      // fallback: abrir en nueva pestaña
-      const blob = new Blob([code], { type: 'text/plain' })
-      const url = URL.createObjectURL(blob)
-      window.open(url, '_blank')
-      setTimeout(() => URL.revokeObjectURL(url), 1000)
+      try {
+        const base64 = btoa(unescape(encodeURIComponent(code)))
+        const a = document.createElement('a')
+        a.href = `data:${mime};base64,${base64}`
+        a.download = filename
+        document.body.appendChild(a)
+        a.click()
+        setTimeout(() => document.body.removeChild(a), 200)
+      } catch (e2) {
+        const w = window.open('', '_blank')
+        if (w) { w.document.write('<pre>' + code.replace(/</g, '&lt;') + '</pre>'); w.document.close() }
+      }
     }
   }
 
@@ -52,7 +81,7 @@ function CodeBlock({ code, language }) {
             <button onClick={handleDownload} style={{ background: 'transparent', color: 'rgba(232,237,242,0.4)', border: '1px solid rgba(255,255,255,0.1)', padding: '4px 12px', fontFamily: "'Share Tech Mono', monospace", fontSize: '10px', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .2s', borderRadius: '2px' }}
               onMouseEnter={e => { e.currentTarget.style.color = '#6bb8d4'; e.currentTarget.style.borderColor = 'rgba(107,184,212,0.6)' }}
               onMouseLeave={e => { e.currentTarget.style.color = 'rgba(232,237,242,0.4)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)' }}>
-              ↓ Save
+              ↓ Download
             </button>
           )}
           <button onClick={handleCopy} style={{ background: copied ? 'rgba(107,184,212,0.3)' : 'transparent', color: copied ? '#6bb8d4' : 'rgba(232,237,242,0.4)', border: '1px solid', borderColor: copied ? 'rgba(107,184,212,0.6)' : 'rgba(255,255,255,0.1)', padding: '4px 12px', fontFamily: "'Share Tech Mono', monospace", fontSize: '10px', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .2s', borderRadius: '2px' }}>
@@ -365,9 +394,11 @@ export default function ChatPage() {
             <div className="modal-icon">⚡</div>
             <div className="modal-title">Limit <span>reached</span></div>
             {limitType === 'pro' ? (
-              <p className="modal-desc">You've used your 45 Pro messages this week. Upgrade to Ultra for unlimited access.</p>
+              <p className="modal-desc">You've used your 200 Pro messages this week. Upgrade to Ultra for 1,000 messages/week.</p>
+            ) : limitType === 'ultra' ? (
+              <p className="modal-desc">You've used your 1,000 Ultra messages this week. Your limit resets every Monday at 00:00 UTC.</p>
             ) : (
-              <p className="modal-desc">You've used your 15 free messages this week. Upgrade to Pro for 45 messages/week or Ultra for unlimited access.</p>
+              <p className="modal-desc">You've used your 15 free messages this week. Upgrade to Pro for 200 messages/week or Ultra for 1,000 messages/week.</p>
             )}
             <button className="modal-btn" onClick={() => window.location.href = '/pricing'}>View plans →</button>
           </div>
