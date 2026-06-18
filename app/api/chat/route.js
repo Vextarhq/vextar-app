@@ -134,6 +134,8 @@ HTML:
 - No references to external files — opens and works immediately
 - Responsive mobile/tablet/desktop mandatory
 - Basic SEO meta tags included
+- NEVER set initial opacity:0 or any hidden state on content that depends on JavaScript (like IntersectionObserver scroll-reveal) to become visible — all content must be visible by default even if JavaScript fails to run or is disabled
+- Scroll-reveal or entrance animations are allowed only as a progressive enhancement: content starts fully visible, animation classes only add extra motion, never control visibility
 
 Python:
 - All imports at the top
