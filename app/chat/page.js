@@ -5,6 +5,31 @@ import { useClerk, useUser } from '@clerk/nextjs'
 
 function CodeBlock({ code, language }) {
   const [copied, setCopied] = useState(false)
+  const [downloadUrl, setDownloadUrl] = useState(null)
+
+  const extMap = {
+    python: 'py', javascript: 'js', typescript: 'ts',
+    jsx: 'jsx', tsx: 'tsx', css: 'css', html: 'html',
+    json: 'json', sql: 'sql', bash: 'sh', shell: 'sh',
+    rust: 'rs', go: 'go', java: 'java', cpp: 'cpp',
+    c: 'c', php: 'php', ruby: 'rb', swift: 'swift',
+    kotlin: 'kt', markdown: 'md', yaml: 'yml', xml: 'xml',
+    csv: 'csv', dockerfile: 'dockerfile', env: 'env', txt: 'txt',
+  }
+  const key = language?.toLowerCase() || ''
+  const ext = extMap[key] || key || 'txt'
+  const filename = `vextar_output.${ext}`
+  const hasLanguage = language && language.trim() !== ''
+
+  useEffect(() => {
+    if (!hasLanguage) return
+    try {
+      const base64 = btoa(unescape(encodeURIComponent(code)))
+      setDownloadUrl(`data:application/octet-stream;base64,${base64}`)
+    } catch (e) {
+      setDownloadUrl(null)
+    }
+  }, [code, hasLanguage])
 
   function handleCopy() {
     navigator.clipboard.writeText(code)
@@ -12,77 +37,15 @@ function CodeBlock({ code, language }) {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  function handleDownload() {
-    const extMap = {
-      python: { ext: 'py', mime: 'text/x-python' },
-      javascript: { ext: 'js', mime: 'text/javascript' },
-      typescript: { ext: 'ts', mime: 'text/typescript' },
-      jsx: { ext: 'jsx', mime: 'text/javascript' },
-      tsx: { ext: 'tsx', mime: 'text/typescript' },
-      css: { ext: 'css', mime: 'text/css' },
-      html: { ext: 'html', mime: 'text/html' },
-      json: { ext: 'json', mime: 'application/json' },
-      sql: { ext: 'sql', mime: 'text/plain' },
-      bash: { ext: 'sh', mime: 'text/x-sh' },
-      shell: { ext: 'sh', mime: 'text/x-sh' },
-      rust: { ext: 'rs', mime: 'text/plain' },
-      go: { ext: 'go', mime: 'text/plain' },
-      java: { ext: 'java', mime: 'text/x-java' },
-      cpp: { ext: 'cpp', mime: 'text/x-c++src' },
-      c: { ext: 'c', mime: 'text/x-csrc' },
-      php: { ext: 'php', mime: 'text/x-php' },
-      ruby: { ext: 'rb', mime: 'text/x-ruby' },
-      swift: { ext: 'swift', mime: 'text/plain' },
-      kotlin: { ext: 'kt', mime: 'text/plain' },
-      markdown: { ext: 'md', mime: 'text/markdown' },
-      yaml: { ext: 'yml', mime: 'text/yaml' },
-      xml: { ext: 'xml', mime: 'text/xml' },
-      csv: { ext: 'csv', mime: 'text/csv' },
-      dockerfile: { ext: 'dockerfile', mime: 'text/plain' },
-      env: { ext: 'env', mime: 'text/plain' },
-      txt: { ext: 'txt', mime: 'text/plain' },
-    }
-    const key = language?.toLowerCase() || ''
-    const { ext, mime } = extMap[key] || { ext: key || 'txt', mime: 'text/plain' }
-    const filename = `vextar_output.${ext}`
-    try {
-      const blob = new Blob([code], { type: mime })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = filename
-      document.body.appendChild(a)
-      a.click()
-      setTimeout(() => { URL.revokeObjectURL(url); document.body.removeChild(a) }, 200)
-    } catch (e) {
-      try {
-        const base64 = btoa(unescape(encodeURIComponent(code)))
-        const a = document.createElement('a')
-        a.href = `data:${mime};base64,${base64}`
-        a.download = filename
-        document.body.appendChild(a)
-        a.click()
-        setTimeout(() => document.body.removeChild(a), 200)
-      } catch (e2) {
-        const w = window.open('', '_blank')
-        if (w) { w.document.write('<pre>' + code.replace(/</g, '&lt;') + '</pre>'); w.document.close() }
-      }
-    }
-  }
-
-  const hasLanguage = language && language.trim() !== ''
-
   return (
     <div style={{ position: 'relative', margin: '12px 0', background: '#060810', border: '1px solid rgba(107,184,212,0.25)', borderRadius: '4px', overflow: 'hidden' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 16px', background: 'rgba(107,184,212,0.08)', borderBottom: '1px solid rgba(107,184,212,0.15)' }}>
         <span style={{ fontSize: '10px', letterSpacing: '.15em', textTransform: 'uppercase', color: 'rgba(107,184,212,0.6)', fontFamily: "'Share Tech Mono', monospace" }}>{language || 'code'}</span>
         <div style={{ display: 'flex', gap: '8px' }}>
-          {hasLanguage && (
-            <button onClick={handleDownload} style={{ background: 'transparent', color: 'rgba(232,237,242,0.4)', border: '1px solid rgba(255,255,255,0.1)', padding: '4px 12px', fontFamily: "'Share Tech Mono', monospace", fontSize: '10px', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .2s', borderRadius: '2px' }}
-              onMouseEnter={e => { e.currentTarget.style.color = '#6bb8d4'; e.currentTarget.style.borderColor = 'rgba(107,184,212,0.6)' }}
-              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(232,237,242,0.4)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)' }}>
+          {hasLanguage && downloadUrl && (
+            <a href={downloadUrl} download={filename} style={{ background: 'transparent', color: 'rgba(232,237,242,0.4)', border: '1px solid rgba(255,255,255,0.1)', padding: '4px 12px', fontFamily: "'Share Tech Mono', monospace", fontSize: '10px', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .2s', borderRadius: '2px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
               ↓ Download
-            </button>
+            </a>
           )}
           <button onClick={handleCopy} style={{ background: copied ? 'rgba(107,184,212,0.3)' : 'transparent', color: copied ? '#6bb8d4' : 'rgba(232,237,242,0.4)', border: '1px solid', borderColor: copied ? 'rgba(107,184,212,0.6)' : 'rgba(255,255,255,0.1)', padding: '4px 12px', fontFamily: "'Share Tech Mono', monospace", fontSize: '10px', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .2s', borderRadius: '2px' }}>
             {copied ? '✓ Copied' : 'Copy'}
