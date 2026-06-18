@@ -43,7 +43,9 @@ function CodeBlock({ code, language }) {
         <span style={{ fontSize: '10px', letterSpacing: '.15em', textTransform: 'uppercase', color: 'rgba(107,184,212,0.6)', fontFamily: "'Share Tech Mono', monospace" }}>{language || 'code'}</span>
         <div style={{ display: 'flex', gap: '8px' }}>
           {hasLanguage && downloadUrl && (
-            <a href={downloadUrl} download={filename} style={{ background: 'transparent', color: 'rgba(232,237,242,0.4)', border: '1px solid rgba(255,255,255,0.1)', padding: '4px 12px', fontFamily: "'Share Tech Mono', monospace", fontSize: '10px', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .2s', borderRadius: '2px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
+            <a href={downloadUrl} download={filename} style={{ background: 'transparent', color: 'rgba(232,237,242,0.4)', border: '1px solid rgba(255,255,255,0.1)', padding: '4px 12px', fontFamily: "'Share Tech Mono', monospace", fontSize: '10px', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .2s', borderRadius: '2px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#6bb8d4'; e.currentTarget.style.borderColor = 'rgba(107,184,212,0.6)' }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(232,237,242,0.4)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)' }}>
               ↓ Download
             </a>
           )}
