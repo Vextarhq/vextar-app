@@ -319,8 +319,9 @@ export default function ChatPage() {
         .send-btn { background: var(--accent); color: #060810; border: none; padding: 14px 22px; font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; transition: opacity .2s, box-shadow .2s; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px)); flex-shrink: 0; align-self: flex-end; height: 48px; }
         .send-btn:hover { opacity: .85; box-shadow: 0 0 20px var(--accent-glow); }
         .send-btn:disabled { opacity: .4; cursor: not-allowed; }
-        .attach-btn { background: transparent; border: 1px solid var(--border); color: var(--text-dim); width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; align-self: flex-end; transition: all .2s; clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px)); font-size: 18px; position: relative; }
+        .attach-btn { background: var(--bg2); border: 1px solid var(--border); color: var(--text-dim); width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; align-self: flex-end; transition: all .2s; clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px)); font-size: 22px; font-weight: 300; line-height: 1; position: relative; }
         .attach-btn:hover { border-color: var(--border-bright); color: var(--accent); background: var(--accent-glow); }
+        .attach-btn:disabled { opacity: .4; cursor: not-allowed; }
         .attach-menu { position: absolute; bottom: 60px; left: 0; background: var(--bg2); border: 1px solid var(--border-bright); min-width: 180px; z-index: 50; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); }
         .attach-menu button { display: flex; align-items: center; gap: 10px; width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border); padding: 12px 16px; color: var(--text-dim); font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; transition: all .2s; }
         .attach-menu button:last-child { border-bottom: none; }
@@ -442,11 +443,11 @@ export default function ChatPage() {
             )}
             <div className="input-row">
               <div style={{ position: 'relative', flexShrink: 0, alignSelf: 'flex-end' }}>
-                <button className="attach-btn" onClick={() => setShowAttachMenu(!showAttachMenu)} disabled={limitReached}>📎</button>
+                <button className="attach-btn" onClick={() => setShowAttachMenu(!showAttachMenu)} disabled={limitReached}>+</button>
                 {showAttachMenu && (
                   <div className="attach-menu">
-                    <button onClick={() => { setShowAttachMenu(false); setTimeout(() => fileInputRef.current.click(), 100) }}>🖼 Upload Image</button>
-                    <button onClick={() => { setShowAttachMenu(false); setTimeout(() => cameraInputRef.current.click(), 100) }}>📷 Take Photo</button>
+                    <button onClick={() => { setShowAttachMenu(false); setTimeout(() => fileInputRef.current.click(), 100) }}>Upload Image</button>
+                    <button onClick={() => { setShowAttachMenu(false); setTimeout(() => cameraInputRef.current.click(), 100) }}>Take Photo</button>
                   </div>
                 )}
               </div>
