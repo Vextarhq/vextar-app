@@ -224,6 +224,10 @@ export default function Landing() {
 
       <nav>
         <a href="#" className="nav-brand">
+          <svg className="logo-icon" viewBox="0 0 100 100" fill="none">
+            <path d="M50 8 L88 30 L88 70 L50 92 L12 70 L12 30 Z" strokeWidth="4" strokeLinejoin="round"/>
+            <path d="M50 8 L50 38 M88 30 L58 46 M88 70 L58 54 M50 92 L50 62 M12 70 L42 54 M12 30 L42 46" strokeWidth="3" strokeLinecap="round"/>
+          </svg>
           <span className="nav-wordmark"><span>V</span>EXTAR</span>
         </a>
         <ul className="nav-links">
@@ -360,6 +364,10 @@ export default function Landing() {
 
       <footer>
         <div className="f-brand">
+          <svg className="logo-icon" viewBox="0 0 100 100" fill="none" style={{ width: '22px', height: '22px' }}>
+            <path d="M50 8 L88 30 L88 70 L50 92 L12 70 L12 30 Z" strokeWidth="4" strokeLinejoin="round"/>
+            <path d="M50 8 L50 38 M88 30 L58 46 M88 70 L58 54 M50 92 L50 62 M12 70 L42 54 M12 30 L42 46" strokeWidth="3" strokeLinecap="round"/>
+          </svg>
           <span className="f-wordmark"><span>V</span>EXTAR</span>
         </div>
         <nav className="f-links">
