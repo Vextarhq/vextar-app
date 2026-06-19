@@ -312,16 +312,16 @@ export default function ChatPage() {
         .typing-dots span:nth-child(3) { animation-delay: .4s; }
         @keyframes dotPulse { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
         .input-area { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; background: var(--bg); }
-        .input-row { display: flex; gap: 12px; align-items: stretch; }
-        .input-wrapper { flex: 1; border: 1px solid var(--border); background: var(--bg2); clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px)); transition: border-color .2s; }
+        .input-row { display: flex; gap: 12px; align-items: center; }
+        .input-wrapper { flex: 1; border: 1px solid var(--border); background: var(--bg2); clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px)); transition: border-color .2s; display: flex; align-items: center; height: 48px; }
         .input-wrapper:focus-within { border-color: var(--border-bright); }
         .input-wrapper.disabled { opacity: .4; pointer-events: none; }
-        .chat-input { width: 100%; background: transparent; border: none; outline: none; color: var(--text); font-family: 'Share Tech Mono', monospace; font-size: 13px; padding: 14px 18px; resize: none; min-height: 48px; max-height: 160px; line-height: 1.6; }
+        .chat-input { width: 100%; background: transparent; border: none; outline: none; color: var(--text); font-family: 'Share Tech Mono', monospace; font-size: 13px; padding: 0 18px; resize: none; height: 100%; max-height: 48px; line-height: 48px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
         .chat-input::placeholder { color: var(--text-faint); }
-        .send-btn { background: var(--accent); color: #060810; border: none; padding: 14px 22px; font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; transition: opacity .2s, box-shadow .2s; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px)); flex-shrink: 0; align-self: flex-end; height: 48px; }
+        .send-btn { background: var(--accent); color: #060810; border: none; padding: 14px 22px; font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; transition: opacity .2s, box-shadow .2s; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px)); flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-height: 48px; }
         .send-btn:hover { opacity: .85; box-shadow: 0 0 20px var(--accent-glow); }
         .send-btn:disabled { opacity: .4; cursor: not-allowed; }
-        .attach-btn { background: var(--bg2); border: 1px solid var(--border); color: var(--text-dim); width: 48px; min-height: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: all .2s; clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px)); font-size: 22px; font-weight: 300; line-height: 1; position: relative; }
+        .attach-btn { background: var(--bg2); border: 1px solid var(--border); color: var(--text-dim); width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: all .2s; clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px)); font-size: 22px; font-weight: 300; line-height: 1; position: relative; }
         .attach-btn:hover { border-color: var(--border-bright); color: var(--accent); background: var(--accent-glow); }
         .attach-btn:disabled { opacity: .4; cursor: not-allowed; }
         .attach-menu { position: absolute; bottom: 60px; left: 0; background: var(--bg2); border: 1px solid var(--border-bright); min-width: 180px; z-index: 50; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); }
@@ -448,7 +448,7 @@ export default function ChatPage() {
               </div>
             )}
             <div className="input-row">
-              <div style={{ position: 'relative', flexShrink: 0, alignSelf: 'flex-end' }}>
+              <div style={{ position: 'relative', flexShrink: 0 }}>
                 <button className="attach-btn" onClick={() => setShowAttachMenu(!showAttachMenu)} disabled={limitReached}>+</button>
                 {showAttachMenu && (
                   <div className="attach-menu">
