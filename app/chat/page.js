@@ -415,7 +415,13 @@ export default function ChatPage() {
           <div className="messages-area">
             {messages.length === 0 && !loading && (
               <div className="empty-state">
-                <div className="empty-title"><span>V</span>EXTAR</div>
+                <div className="empty-title">
+                  <svg className="logo-icon" viewBox="0 0 100 100" fill="none" style={{ width: '52px', height: '52px' }}>
+                    <path d="M50 8 L88 30 L88 70 L50 92 L12 70 L12 30 Z" strokeWidth="4" strokeLinejoin="round"/>
+                    <path d="M50 8 L50 38 M88 30 L58 46 M88 70 L58 54 M50 92 L50 62 M12 70 L42 54 M12 30 L42 46" strokeWidth="3" strokeLinecap="round"/>
+                  </svg>
+                  <span><span>V</span>EXTAR</span>
+                </div>
                 <div className="empty-sub">AI Code Intelligence — Ready</div>
               </div>
             )}
