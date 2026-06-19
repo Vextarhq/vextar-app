@@ -88,6 +88,8 @@ export default function Landing() {
         .cursor-ring.grow { width:48px; height:48px; border-color:rgba(107,184,212,0.3); }
         nav { position:fixed; top:0; left:0; right:0; z-index:100; height:60px; display:flex; align-items:center; justify-content:space-between; padding:0 56px; border-bottom:1px solid var(--border); background:rgba(6,8,16,0.85); backdrop-filter:blur(20px); }
         .nav-brand { display:flex; align-items:center; gap:12px; text-decoration:none; opacity:0; animation:fadeIn .8s ease .1s forwards; }
+        .logo-icon { width:28px; height:28px; flex-shrink:0; }
+        .logo-icon path { stroke:var(--accent); }
         .nav-wordmark { font-family:'Rajdhani',sans-serif; font-size:20px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--text); }
         .nav-wordmark span { color:var(--accent); }
         .nav-links { display:flex; gap:40px; list-style:none; opacity:0; animation:fadeIn .8s ease .25s forwards; }
@@ -188,6 +190,7 @@ export default function Landing() {
         .faq-item.open .faq-a { max-height:200px; padding:0 36px 28px; }
         .faq-a-text { font-size:13px; color:var(--text-dim); line-height:1.9; border-left:2px solid var(--border-bright); padding-left:16px; }
         footer { border-top:1px solid var(--border); padding:32px 56px; display:flex; align-items:center; justify-content:space-between; }
+        .f-brand { display:flex; align-items:center; gap:10px; }
         .f-wordmark { font-family:'Rajdhani',sans-serif; font-size:14px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--text-dim); }
         .f-wordmark span { color:var(--accent); }
         .f-links { display:flex; gap:28px; }
