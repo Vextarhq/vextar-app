@@ -270,8 +270,10 @@ export default function ChatPage() {
         .sidebar-overlay.open { display: block; }
         .sidebar { width: 260px; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; overflow: hidden; }
         .sidebar-top { padding: 24px 16px 0; flex-shrink: 0; }
-        .sidebar-logo { font-family: 'Rajdhani', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--text); margin-bottom: 24px; padding: 0 8px; }
+        .sidebar-logo { font-family: 'Rajdhani', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--text); margin-bottom: 24px; padding: 0 8px; display: flex; align-items: center; gap: 10px; }
         .sidebar-logo span { color: var(--accent); }
+        .logo-icon { flex-shrink: 0; }
+        .logo-icon path { stroke: var(--accent); }
         .new-chat-btn { background: transparent; color: var(--accent); border: 1px solid var(--border-bright); padding: 10px 16px; font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; margin-bottom: 24px; transition: background .2s, box-shadow .2s; clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px)); text-align: left; width: 100%; }
         .new-chat-btn:hover { background: var(--accent-glow); box-shadow: 0 0 16px var(--accent-glow); }
         .sidebar-label { font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 10px; padding: 0 8px; }
@@ -293,7 +295,7 @@ export default function ChatPage() {
         .messages-area::-webkit-scrollbar { width: 3px; }
         .messages-area::-webkit-scrollbar-thumb { background: var(--border); }
         .empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; opacity: 0.4; }
-        .empty-title { font-family: 'Rajdhani', sans-serif; font-size: 48px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--text); }
+        .empty-title { font-family: 'Rajdhani', sans-serif; font-size: 48px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--text); display: flex; align-items: center; gap: 16px; }
         .empty-title span { color: var(--accent); }
         .empty-sub { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-faint); }
         .msg-row { display: flex; flex-direction: column; gap: 4px; }
@@ -376,7 +378,13 @@ export default function ChatPage() {
       <div className="chat-layout">
         <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
           <div className="sidebar-top">
-            <div className="sidebar-logo"><span>V</span>EXTAR</div>
+            <div className="sidebar-logo">
+              <svg className="logo-icon" viewBox="0 0 100 100" fill="none" style={{ width: '24px', height: '24px' }}>
+                <path d="M50 8 L88 30 L88 70 L50 92 L12 70 L12 30 Z" strokeWidth="4" strokeLinejoin="round"/>
+                <path d="M50 8 L50 38 M88 30 L58 46 M88 70 L58 54 M50 92 L50 62 M12 70 L42 54 M12 30 L42 46" strokeWidth="3" strokeLinecap="round"/>
+              </svg>
+              <span><span>V</span>EXTAR</span>
+            </div>
             <button className="new-chat-btn" onClick={newChat}>+ New chat</button>
             <div className="sidebar-label">Conversations</div>
           </div>
