@@ -216,9 +216,8 @@ export default function Landing() {
         .chat-attach-btn:hover { border-color:var(--accent); }
         .chat-attach-btn { width:44px; }
         .chat-attach-btn svg { width:18px; height:18px; }
-        .chat-send-btn { background:var(--accent); border:1px solid var(--accent); padding:0 20px; gap:6px; }
+        .chat-send-btn { background:var(--accent); border:1px solid var(--accent); width:44px; padding:0; }
         .chat-send-btn:hover { opacity:.85; box-shadow:0 0 16px var(--accent-glow); }
-        .chat-send-btn span { font-family:'Share Tech Mono',monospace; font-size:12px; letter-spacing:.1em; font-weight:700; text-transform:uppercase; color:var(--bg); }
         .chat-send-btn svg { width:14px; height:14px; }
         .chat-text-input { flex:1; min-width:0; background:var(--bg2); border:1px solid var(--border-bright); color:var(--text); font-family:'Share Tech Mono',monospace; font-size:13px; padding:0 16px; height:44px; clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px)); outline:none; cursor:none; box-sizing:border-box; }
         .chat-text-input::placeholder { color:var(--text-faint); }
@@ -298,7 +297,6 @@ export default function Landing() {
               onClick={goToLogin}
               aria-label="Send message"
             >
-              <span>Send</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="#060810" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
               </svg>
