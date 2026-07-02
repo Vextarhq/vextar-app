@@ -12,6 +12,15 @@ export default function Landing() {
   const [chatInput, setChatInput] = useState('')
 
   useEffect(() => {
+    // Defensive reset: clears any leftover scroll-lock left behind by a previous
+    // page (e.g. the chat page sets html,body{overflow:hidden} for its own internal
+    // scroll areas — if that page unmounts without cleanup during a redirect, this
+    // page could otherwise inherit a stuck, non-scrollable body).
+    document.documentElement.style.overflow = ''
+    document.documentElement.style.height = ''
+    document.body.style.overflow = ''
+    document.body.style.height = ''
+
     const cur = cursorRef.current
     const ring = ringRef.current
     let mx = 0, my = 0, rx = 0, ry = 0
@@ -50,7 +59,7 @@ export default function Landing() {
     return () => document.removeEventListener('mousemove', move)
   }, [])
 
-  const goToLogin = () => router.push('/login')
+  const goToLogin = () => router.push('/chat')
   const goToPricing = () => router.push('/pricing')
 
   const faqs = [
@@ -83,8 +92,8 @@ export default function Landing() {
           --accent: #6bb8d4; --accent2: #4a9ab8; --accent-glow: rgba(107,184,212,0.15);
           --text: #e8edf2; --text-dim: rgba(232,237,242,0.45); --text-faint: rgba(232,237,242,0.2);
         }
-        html { scroll-behavior: smooth; overflow-x: hidden; max-width: 100%; }
-        body { background:var(--bg); color:var(--text); font-family:'Share Tech Mono',monospace; overflow-x:hidden; cursor:none; -webkit-font-smoothing:antialiased; }
+        html { scroll-behavior: smooth; overflow-x: hidden; overflow-y: auto !important; max-width: 100%; height: auto !important; }
+        body { background:var(--bg); color:var(--text); font-family:'Share Tech Mono',monospace; overflow-x:hidden; overflow-y: auto !important; height: auto !important; cursor:none; -webkit-font-smoothing:antialiased; }
         body::before { content:''; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.025; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); background-size:180px 180px; }
         .cursor { position:fixed; z-index:9999; pointer-events:none; width:4px; height:4px; border-radius:50%; background:var(--accent); transform:translate(-50%,-50%); box-shadow:0 0 8px var(--accent); }
         .cursor-ring { position:fixed; z-index:9998; pointer-events:none; width:24px; height:24px; border-radius:50%; border:1px solid rgba(107,184,212,0.5); transform:translate(-50%,-50%); transition:width .4s cubic-bezier(.4,0,.2,1),height .4s cubic-bezier(.4,0,.2,1); }
@@ -205,7 +214,7 @@ export default function Landing() {
         .reveal { opacity:0; transform:translateY(18px); transition:opacity .7s ease,transform .7s ease; }
         .reveal.in { opacity:1; transform:none; }
 
-        .demo-section { background:var(--bg2); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding-top:140px; }
+        .demo-section { background:var(--bg2); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding-top:140px; padding-left:28px; padding-right:28px; }
         .chat-widget { width:100%; margin:64px 0 0; background:#060810; border:1px solid var(--border); position:relative; display:flex; flex-direction:column; }
         .chat-widget::before { content:''; position:absolute; inset:-1px; background:linear-gradient(135deg,var(--border-bright),transparent 60%); pointer-events:none; z-index:-1; }
         .chat-empty-state { display:flex; align-items:center; justify-content:center; gap:28px; padding:64px 24px; background:#060810; }
@@ -240,6 +249,7 @@ export default function Landing() {
           .faq-q{padding:20px} .faq-a{padding:0 20px} .faq-item.open .faq-a{padding:0 20px 20px}
         }
         @media(max-width:580px){ .features-grid,.process-grid,.metrics{grid-template-columns:1fr} }
+        @media(max-width:900px){ .demo-section{ padding-left:10px; padding-right:10px; } }
       `}</style>
 
       <link rel="preconnect" href="https://fonts.googleapis.com" />
