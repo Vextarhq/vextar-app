@@ -59,7 +59,7 @@ export default function Landing() {
     return () => document.removeEventListener('mousemove', move)
   }, [])
 
-  const goToLogin = () => router.push('/chat')
+  const goToLogin = () => router.push('/login?redirect_url=/chat')
   const goToPricing = () => router.push('/pricing')
 
   const faqs = [
